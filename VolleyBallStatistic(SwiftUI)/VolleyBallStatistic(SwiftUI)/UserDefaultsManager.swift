@@ -58,10 +58,14 @@ class UserDefaultsManager {
             print("Unable to Encode Array of Data (\(error))")
         }
     }
-    func removeLast() {
+    func remove(with id: UUID) {
         var players = UserDefaultsManager.shared.players
-        if !players.isEmpty {
-            players.removeLast()
+        var count = 0
+        players.forEach { player in
+            if player.id == id {
+                players.remove(at: count)
+            }
+            count += 1
         }
         do {
             let encoder = JSONEncoder()

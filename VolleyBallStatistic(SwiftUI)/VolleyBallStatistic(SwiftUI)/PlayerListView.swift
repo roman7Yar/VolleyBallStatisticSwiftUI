@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerListView: View {
-   @State var players = UserDefaultsManager.shared.players
+   @State private var players = UserDefaultsManager.shared.players
     
     var body: some View {
         List(players) { player in
@@ -17,11 +17,19 @@ struct PlayerListView: View {
             } label: {
                 PlayerRowView(player: player)
             }
+            .swipeActions {
+                Button(role: .destructive) {
+                    UserDefaultsManager.shared.remove(with: player.id)
+                    players = UserDefaultsManager.shared.players
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
         }
         .onAppear {
             players = UserDefaultsManager.shared.players
         }
-        .navigationTitle("Players")
+        .navigationTitle("Гравці")
         
         .navigationBarItems(trailing: NavigationLink {
             PlayerView(viewModel: CreateUserViewModel())
@@ -29,12 +37,12 @@ struct PlayerListView: View {
             Image(systemName: "plus.circle")
         })
         
-        .navigationBarItems(trailing: Button {
-            UserDefaultsManager.shared.removeLast()
-            players = UserDefaultsManager.shared.players
-        } label: {
-            Image(systemName: "minus.circle")
-        })
+//        .navigationBarItems(trailing: Button {
+//            UserDefaultsManager.shared.removeLast()
+//            players = UserDefaultsManager.shared.players
+//        } label: {
+//            Image(systemName: "minus.circle")
+//        })
     }
 }
 
@@ -75,13 +83,7 @@ struct PlayerRowView: View {
 
 struct PlayerListView_Previews: PreviewProvider {
     static var previews: some View {
-        let players = [
-            Player(id: UUID(), firstName: "John", lastName: "Doe"),
-            Player(id: UUID(), firstName: "Jane", lastName: "Doe"),
-            Player(id: UUID(), firstName: "Bob", lastName: "Smith")
-        ]
-        
-        PlayerListView(players: players)
+        PlayerListView()
     }
 }
 
