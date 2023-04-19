@@ -19,34 +19,49 @@ struct ContentView: View {
     @State private var selectedSegment2 = 0
 
     @State var isShowingNextScreen = false
+    var size = CGFloat(32)
     var body: some View {
         NavigationView {
             ZStack {
                 GreenGradientBG()
-                GeometryReader { proxy in
-                    let minX = proxy.frame(in: .global).minX
-                    let minY = proxy.frame(in: .global).minY
-                    let maxX = proxy.frame(in: .global).maxX
-                    let height = proxy.size.height
-
-                    Image("upBall").position(x: minX + 32, y: minY - 124)
-                    Image("middleBall").position(x: minX, y: height * 0.65)
-                    Image("downBall").position(x: maxX + 20, y: height)
+                Image("bg")
+                    .resizable()
+                    .ignoresSafeArea()
+                    .padding(-200)
+                VStack {
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                            .resizable()
+                            .frame(width: size, height: size)
+                            .foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .frame(width: size, height: size)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .ignoresSafeArea()
+                    Spacer()
                 }
                 VStack(spacing: 40) {
+                    Spacer()
                     Text("Volleyball tracker")
                         .bold()
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.center)
                         .font(.system(size: 60))
                         .foregroundColor(.white)
-                    Spacer()
+//                    Spacer()
                     CustomSegmentedControl(preselectedIndex: $selectedSegment2, options: ["score", "statistic", "extended"])
                         .padding(.horizontal, 8)
-                    MenuButton(title: "Нова гра")
-                    MenuButton(title: "Статистика")
+                    MenuButton(title: "New game")
+                    MenuButton(title: "Statistics")
                     NavigationLink {
                         PlayerListView()
                     } label: {
-                        MenuButton(title: "Гравці")
+                        MenuButton(title: "Players")
                     }
                     Spacer(minLength: 100)
                 }
@@ -75,7 +90,8 @@ struct MenuButton: View {
                 .padding(.vertical, 15)
                 .background(Color.white)
                 .foregroundColor(.init(red: 0.149, green: 0.6471, blue: 0.3961))
-                .cornerRadius(20)
+                .cornerRadius(50)
+                .shadow(radius: 12, y: 9)
     }
 }
 
@@ -95,11 +111,11 @@ struct CustomSegmentedControl: View {
             ForEach(options.indices, id:\.self) { index in
                 ZStack {
                     Rectangle()
-                        .fill(Color.gray.opacity(0.2))
+                        .fill(Color.init(red: 0.1725, green: 0.5255, blue: 0.3412))
                     Rectangle()
                         .fill(color)
                         .cornerRadius(10)
-                        .padding(8)
+                        .padding(12)
                         .opacity(preselectedIndex == index ? 1 : 0.01)
                         .onTapGesture {
                                 withAnimation(.interactiveSpring()) {
@@ -115,7 +131,7 @@ struct CustomSegmentedControl: View {
                 )
             }
         }
-        .frame(height: 72)
+        .frame(height: 80)
         .cornerRadius(10)
     }
 }

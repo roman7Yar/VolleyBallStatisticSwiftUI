@@ -33,7 +33,6 @@ class UserDefaultsManager {
                 } catch {
                     print("Unable to Decode Data (\(error))")
                 }
-//                return players
             }
             return players
         }
