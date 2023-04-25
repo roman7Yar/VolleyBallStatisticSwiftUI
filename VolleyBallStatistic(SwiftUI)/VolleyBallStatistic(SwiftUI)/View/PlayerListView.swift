@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlayerListView: View {
    @State private var players = UserDefaultsManager.shared.players
-    
+    // TODO: bool isSelectingMode
     var body: some View {
         List(players) { player in
             NavigationLink {
@@ -48,6 +48,7 @@ struct PlayerListView: View {
 
 struct PlayerRowView: View {
     var player: Player
+    var pictures = UserDefaultsManager.shared.pictures
     
     var body: some View {
         HStack {
@@ -55,12 +56,13 @@ struct PlayerRowView: View {
                 Circle()
                     .frame(width: 50, height: 50
                     )
-                    .foregroundColor(.init(red: 0.8, green: 0.8, blue: 0.8))
+                    .foregroundColor(.myLightGreen)
                 Text("\(firstChar(of: player.firstName))" +
                      "\(firstChar(of: player.lastName))")
                 .font(.system(size: 20))
+                .foregroundColor(.myWhite)
                 .bold()
-                if let profilePicture = player.profilePicture {
+                if let profilePicture = pictures[player.id] {
                     Image(uiImage: UIImage(data: profilePicture)!)
                         .resizable()
                         .frame(width: 50, height: 50)

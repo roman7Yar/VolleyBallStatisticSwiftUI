@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C353C1ED29F66A7C000E15CE /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1EC29F66A7C000E15CE /* TeamView.swift */; };
+		C353C1EF29F66B8A000E15CE /* TeamListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1EE29F66B8A000E15CE /* TeamListView.swift */; };
+		C353C1F129F66BF4000E15CE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1F029F66BF4000E15CE /* SettingsView.swift */; };
+		C353C1F429F66CC7000E15CE /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1F329F66CC7000E15CE /* StatisticView.swift */; };
+		C353C1F629F66CEC000E15CE /* GamesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1F529F66CEC000E15CE /* GamesListView.swift */; };
+		C353C1F829F69F75000E15CE /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353C1F729F69F75000E15CE /* Extentions.swift */; };
 		C37975CF29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975CE29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift */; };
 		C37975D129D2FF850008E068 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975D029D2FF850008E068 /* ContentView.swift */; };
 		C37975D329D2FF8E0008E068 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C37975D229D2FF8E0008E068 /* Assets.xcassets */; };
@@ -16,9 +22,16 @@
 		C37975E129D4881F0008E068 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E029D4881F0008E068 /* PlayerListView.swift */; };
 		C37975E329D592890008E068 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E229D592890008E068 /* UserDefaultsManager.swift */; };
 		C37975E529D5CBD30008E068 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E429D5CBD20008E068 /* PhotoPicker.swift */; };
+		C3B44EEA29F2C05B00ABA875 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B44EE929F2C05B00ABA875 /* GameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C353C1EC29F66A7C000E15CE /* TeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
+		C353C1EE29F66B8A000E15CE /* TeamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamListView.swift; sourceTree = "<group>"; };
+		C353C1F029F66BF4000E15CE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C353C1F329F66CC7000E15CE /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
+		C353C1F529F66CEC000E15CE /* GamesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListView.swift; sourceTree = "<group>"; };
+		C353C1F729F69F75000E15CE /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 		C37975CB29D2FF850008E068 /* VolleyBallStatistic(SwiftUI).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VolleyBallStatistic(SwiftUI).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C37975CE29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolleyBallStatistic_SwiftUI_App.swift; sourceTree = "<group>"; };
 		C37975D029D2FF850008E068 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -29,6 +42,7 @@
 		C37975E029D4881F0008E068 /* PlayerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
 		C37975E229D592890008E068 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		C37975E429D5CBD20008E068 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
+		C3B44EE929F2C05B00ABA875 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C353C1F229F66C0C000E15CE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C37975DC29D464110008E068 /* PlayerModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		C37975C229D2FF850008E068 = {
 			isa = PBXGroup;
 			children = (
@@ -62,11 +84,10 @@
 			isa = PBXGroup;
 			children = (
 				C37975CE29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift */,
-				C37975D029D2FF850008E068 /* ContentView.swift */,
-				C37975DC29D464110008E068 /* PlayerModel.swift */,
-				C37975DE29D47ABC0008E068 /* PlayerView.swift */,
-				C37975E029D4881F0008E068 /* PlayerListView.swift */,
+				C3B44EEB29F2C06200ABA875 /* View */,
+				C353C1F229F66C0C000E15CE /* Model */,
 				C37975E429D5CBD20008E068 /* PhotoPicker.swift */,
+				C353C1F729F69F75000E15CE /* Extentions.swift */,
 				C37975E229D592890008E068 /* UserDefaultsManager.swift */,
 				C37975D229D2FF8E0008E068 /* Assets.xcassets */,
 				C37975D429D2FF8E0008E068 /* Preview Content */,
@@ -80,6 +101,22 @@
 				C37975D529D2FF8E0008E068 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C3B44EEB29F2C06200ABA875 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C37975D029D2FF850008E068 /* ContentView.swift */,
+				C37975DE29D47ABC0008E068 /* PlayerView.swift */,
+				C37975E029D4881F0008E068 /* PlayerListView.swift */,
+				C3B44EE929F2C05B00ABA875 /* GameView.swift */,
+				C353C1EC29F66A7C000E15CE /* TeamView.swift */,
+				C353C1EE29F66B8A000E15CE /* TeamListView.swift */,
+				C353C1F029F66BF4000E15CE /* SettingsView.swift */,
+				C353C1F329F66CC7000E15CE /* StatisticView.swift */,
+				C353C1F529F66CEC000E15CE /* GamesListView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,12 +190,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				C37975E529D5CBD30008E068 /* PhotoPicker.swift in Sources */,
+				C353C1F429F66CC7000E15CE /* StatisticView.swift in Sources */,
 				C37975E129D4881F0008E068 /* PlayerListView.swift in Sources */,
 				C37975D129D2FF850008E068 /* ContentView.swift in Sources */,
 				C37975E329D592890008E068 /* UserDefaultsManager.swift in Sources */,
 				C37975DD29D464110008E068 /* PlayerModel.swift in Sources */,
+				C353C1F829F69F75000E15CE /* Extentions.swift in Sources */,
 				C37975CF29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift in Sources */,
+				C3B44EEA29F2C05B00ABA875 /* GameView.swift in Sources */,
+				C353C1EF29F66B8A000E15CE /* TeamListView.swift in Sources */,
 				C37975DF29D47ABC0008E068 /* PlayerView.swift in Sources */,
+				C353C1ED29F66A7C000E15CE /* TeamView.swift in Sources */,
+				C353C1F629F66CEC000E15CE /* GamesListView.swift in Sources */,
+				C353C1F129F66BF4000E15CE /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
