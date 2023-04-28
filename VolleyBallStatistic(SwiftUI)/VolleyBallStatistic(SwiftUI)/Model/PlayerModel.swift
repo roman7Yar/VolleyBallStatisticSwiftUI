@@ -37,6 +37,40 @@ struct Team: Identifiable, Codable {
     var players = [Player]()
 //    var isSelected = false
 }
+class GameModel: ObservableObject {
+    @Published var teams: [TeamViewModel] = []
+    func addTeam(_ team: TeamViewModel) {
+        if teams.count < 2 {
+            teams.append(team)
+        } else {
+            teams.removeFirst()
+            teams.append(team)
+        }
+        teams.forEach { item in
+            print("")
+            print(item.team.name)
+            print(item.team.id)
+        }
+    }
+  
+    func deleteTeam(_ team: TeamViewModel) {
+        var count = 0
+        teams.forEach { item in
+            if item.team.id == team.team.id {
+                teams.remove(at: count)
+            }
+            count += 1
+        }
+        team.deselectTeam()
+        teams.forEach { item in
+            print("")
+            print(item.team.name)
+            print(item.team.id)
+        }
+
+    }
+
+}
 
 class TeamViewModel: ObservableObject {
     

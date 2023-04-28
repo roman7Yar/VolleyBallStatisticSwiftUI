@@ -22,9 +22,9 @@ struct TeamListView: View {
 //    @EnvironmentObject var teamSelection: TeamSelection
 
     @State private var teams = UserDefaultsManager.shared.teams
-    @State private var refresh = false
-        
-    @StateObject var teamViewModel = TeamViewModel()
+//    @State private var refresh = false
+    @ObservedObject var game = GameModel()
+    @ObservedObject var teamViewModel = TeamViewModel()
     
 //    var selectedTeamsCount =  {
 //        didSet {
@@ -43,7 +43,7 @@ struct TeamListView: View {
                     .font(.system(size: 60))
                     .foregroundColor(.myWhite)
                 ForEach(teams) { team in
-                    TeamItem(teamViewModel: TeamViewModel(team: team))
+                    TeamItem(teamViewModel: TeamViewModel(team: team), game: game)
                         .onTapGesture {
                             print(team.name)
 //                            team.isSelected.toggle()
@@ -71,23 +71,29 @@ struct TeamListView: View {
                 }
                 .padding()
             }
-            if teamViewModel.teamsToPlay.count == 2 {
-                NavigationLink {
-                    GameView()
-                } label: {
-                    Text("Play")
-                        .padding()
-                        .background(Color.myYellow)
-                        .foregroundColor(.myWhite)
-                        .cornerRadius(8)
+            if game.teams.count == 2 {
+                VStack {
+                    Spacer()
+                    NavigationLink {
+                        GameView()
+                    } label: {
+                        Text("Play")
+                            .font(.system(size: 30))
+                            .padding()
+                            .padding(.horizontal, 20)
+                            .background(Color.myYellow)
+                            .foregroundColor(.myWhite)
+                            .cornerRadius(8)
+                            .padding()
+                    }
                 }
             }
 
         }
         .onAppear {
-            teams = UserDefaultsManager.shared.teams
             AppDelegate.orientationLock = .portrait
             UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            teams = UserDefaultsManager.shared.teams
         }
     }
 }
@@ -134,6 +140,7 @@ struct PlayerItem: View {
 
 struct TeamItem: View {
     @ObservedObject var teamViewModel: TeamViewModel
+    @ObservedObject var game: GameModel
     
     @State private var isSelected = false
 
@@ -172,15 +179,11 @@ struct TeamItem: View {
                         }
                         Spacer()
                         Button {
-//                            teamSelection.isSelected.toggle()
-//                            teamViewModel.team.isSelected.toggle()
-//                            teamViewModel.saveTeam(teamViewModel.team)
-//                            refresh.toggle()
                             isSelected.toggle()
                             if isSelected {
-                                teamViewModel.selectTeam()
+                                game.addTeam(teamViewModel)
                             } else {
-                                teamViewModel.deselectTeam()
+                                game.deleteTeam(teamViewModel)
                             }
                         } label: {
                             Image(systemName: isSelected ? "star.fill" : "star")
