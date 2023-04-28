@@ -67,9 +67,9 @@ struct TeamRow: View {
             Text("Team 1")
                 .font(.system(size: 32))
                 .foregroundColor(.white)
-            NavigationLink {
-                TeamView()
-            } label: {
+//            NavigationLink {
+//                TeamView()
+//            } label: {
                 Text("Edit")
                     .font(.system(size: 24))
                     .foregroundColor(.white)
@@ -77,8 +77,8 @@ struct TeamRow: View {
                     .padding(.horizontal, 40)
                     .background(Color.yellow)
                     .cornerRadius(8)
-                
-            }
+//                
+//            }
             
         }
     }

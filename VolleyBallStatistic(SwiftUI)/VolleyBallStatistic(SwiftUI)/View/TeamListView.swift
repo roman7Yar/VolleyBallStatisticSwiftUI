@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
-
+//
 //class TeamSelection: ObservableObject {
 //    @Published var isSelected = false
 //
-////    var selectedTeamsCount: Int {
-////            return teams.filter { $0.isSelected }.count
-////        }
+//    var selectedTeamsCount: Int {
+//        return UserDefaultsManager.shared.teams.filter { $0.isSelected }.count
+//        }
 //
 //}
 
@@ -20,6 +20,18 @@ import SwiftUI
 struct TeamListView: View {
     
 //    @EnvironmentObject var teamSelection: TeamSelection
+
+    @State private var teams = UserDefaultsManager.shared.teams
+    @State private var refresh = false
+        
+    @StateObject var teamViewModel = TeamViewModel()
+    
+//    var selectedTeamsCount =  {
+//        didSet {
+//            if
+//        }
+//        }
+
     
     var body: some View {
         ZStack {
@@ -30,13 +42,24 @@ struct TeamListView: View {
                 Text("Teams")
                     .font(.system(size: 60))
                     .foregroundColor(.myWhite)
-                TeamItem()
-                TeamItem()
-                TeamItem()
-                TeamItem()
-                TeamItem()
+                ForEach(teams) { team in
+                    TeamItem(teamViewModel: TeamViewModel(team: team))
+                        .onTapGesture {
+                            print(team.name)
+//                            team.isSelected.toggle()
+                        }
+                        .contextMenu {
+                            Button("Delete") {
+                                UserDefaultsManager.shared.removeTeam(withId: team.id)
+                                teams = UserDefaultsManager.shared.teams
+                            }
+
+                        }
+                }
+               
                 NavigationLink {
-                    TeamView()
+                    TeamView(teamViewModel: TeamViewModel()
+                    )
                 } label: {
                     Image(systemName: "plus")
                         .resizable()
@@ -48,25 +71,24 @@ struct TeamListView: View {
                 }
                 .padding()
             }
-//            if isSelected {
-//                NavigationLink {
-//                    GameView()
-//                } label: {
-//                    Text("Play")
-//                        .padding()
-//                        .background(Color.myYellow)
-//                        .foregroundColor(.myWhite)
-//                        .cornerRadius(8)
-//                }
-//
-//            }
+            if teamViewModel.teamsToPlay.count == 2 {
+                NavigationLink {
+                    GameView()
+                } label: {
+                    Text("Play")
+                        .padding()
+                        .background(Color.myYellow)
+                        .foregroundColor(.myWhite)
+                        .cornerRadius(8)
+                }
+            }
 
         }
         .onAppear {
-            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            teams = UserDefaultsManager.shared.teams
             AppDelegate.orientationLock = .portrait
+            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
         }
-//        .environmentObject(teamSelection)
     }
 }
 
@@ -78,19 +100,30 @@ struct TeamListView_Previews: PreviewProvider {
 }
 
 struct PlayerItem: View {
+    private let pictures = UserDefaultsManager.shared.pictures
+    private let circleSize = CGFloat(40)
+    var player: Player
     var body: some View {
         VStack {
             ZStack {
                 Circle()
-                    .frame(width: 40, height: 40)
+                    .frame(width: circleSize, height: circleSize)
                     .foregroundColor(.mint)
-                Text("NS")
+                Text("\(firstChar(of: player.firstName))" +
+                     "\(firstChar(of: player.lastName))")
                     .font(.system(size: 20))
                     .foregroundColor(.myWhite)
+                if let profilePicture = pictures[player.id] {
+                    Image(uiImage: UIImage(data: profilePicture)!)
+                        .resizable()
+                        .frame(width: circleSize, height: circleSize)
+                        .clipShape(Circle())
+                }
+
             }
-            Text("Name")
+            Text(player.firstName)
                 .foregroundColor(.myBlack)
-            Text("Surname")
+            Text(player.lastName)
                 .foregroundColor(.myBlack)
 
         }
@@ -98,13 +131,15 @@ struct PlayerItem: View {
     }
 }
 
-struct TeamItem: View {// TODO: ObservableObject
-//    @ObservedObject var teamSelection = TeamSelection()
+
+struct TeamItem: View {
+    @ObservedObject var teamViewModel: TeamViewModel
+    
     @State private var isSelected = false
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Team 1")
+            Text(teamViewModel.team.name)
                 .font(.system(size: 30))
                 .foregroundColor(.myWhite)
             ZStack {
@@ -115,17 +150,17 @@ struct TeamItem: View {// TODO: ObservableObject
                 VStack {
                     ScrollView(.horizontal) {
                         HStack {
-                            PlayerItem()
-                            PlayerItem()
-                            PlayerItem()
-                            PlayerItem()
-                            PlayerItem()
-                            PlayerItem()
+                            if let players = teamViewModel.team.players {
+                                ForEach(players) { player in
+                                    PlayerItem(player: player)
+                                }
+                                
+                            }
                         }
                     }
                     HStack {
                         NavigationLink {
-                            TeamView()
+                            TeamView(teamViewModel: TeamViewModel(team: teamViewModel.team))
                         } label: {
                             Text("Change")
                                 .font(.system(size: 24))
@@ -136,13 +171,26 @@ struct TeamItem: View {// TODO: ObservableObject
 
                         }
                         Spacer()
-                        Image(systemName: isSelected ? "star.fill" : "star")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(isSelected ? .myYellow : .myDarkGray)
-                            .onTapGesture {
-                                isSelected.toggle()
+                        Button {
+//                            teamSelection.isSelected.toggle()
+//                            teamViewModel.team.isSelected.toggle()
+//                            teamViewModel.saveTeam(teamViewModel.team)
+//                            refresh.toggle()
+                            isSelected.toggle()
+                            if isSelected {
+                                teamViewModel.selectTeam()
+                            } else {
+                                teamViewModel.deselectTeam()
                             }
+                        } label: {
+                            Image(systemName: isSelected ? "star.fill" : "star")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(isSelected ? .myYellow : .myDarkGray)
+
+                        }
+
+                            
                     }
                     .padding(20)
                 }

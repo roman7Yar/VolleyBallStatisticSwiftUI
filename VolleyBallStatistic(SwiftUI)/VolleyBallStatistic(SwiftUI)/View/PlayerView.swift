@@ -92,13 +92,14 @@ struct PlayerView: View {
         
     }
     
-    func firstChar(of string: String) -> String {
-        string.isEmpty ? "" : String(string.first!)
-    }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerView(viewModel: CreateUserViewModel())
     }
+}
+
+func firstChar(of string: String) -> String {
+    string.isEmpty ? "" : String(string.first!)
 }

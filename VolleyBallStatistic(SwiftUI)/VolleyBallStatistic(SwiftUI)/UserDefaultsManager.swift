@@ -85,7 +85,7 @@ class UserDefaultsManager {
         }
     }
    
-    func remove(with id: UUID) {
+    func removePlayer(withId id: UUID) {
         var players = UserDefaultsManager.shared.players
         var count = 0
         players.forEach { player in
@@ -105,7 +105,7 @@ class UserDefaultsManager {
     
     var teams: [Team] {
         get {
-            var teams = [Team(id: UUID(), name: "", players: nil)]
+            var teams = [Team(id: UUID(), name: "")]
            
             if let data = UserDefaults.standard.data(forKey: teamsKey) {
                 do {
@@ -132,7 +132,8 @@ class UserDefaultsManager {
             }
             count += 1
         }
-        teams.append(team)
+        teams.insert(team, at: 0)
+        
         
         do {
             let encoder = JSONEncoder()
@@ -142,5 +143,24 @@ class UserDefaultsManager {
             print("Unable to Encode Array of Data (\(error))")
         }
     }
+    
+    func removeTeam(withId id: UUID) {
+        var teams = UserDefaultsManager.shared.teams
+        var count = 0
+        teams.forEach { team in
+            if team.id == id {
+                teams.remove(at: count)
+            }
+            count += 1
+        }
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(teams)
+            UserDefaults.standard.set(data, forKey: teamsKey)
+        } catch {
+            print("Unable to Encode Array of Data (\(error))")
+        }
+    }
+
 
 }

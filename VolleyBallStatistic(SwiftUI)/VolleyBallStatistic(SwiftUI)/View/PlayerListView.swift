@@ -7,24 +7,46 @@
 
 import SwiftUI
 
+enum ListMode {
+    case detail, selecting
+}
+
 struct PlayerListView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
    @State private var players = UserDefaultsManager.shared.players
-    // TODO: bool isSelectingMode
+    var listMode = ListMode.detail
+   @ObservedObject var viewModel = TeamViewModel()
+    var index = 0
     var body: some View {
         List(players) { player in
-            NavigationLink {
-                PlayerView(viewModel: CreateUserViewModel(player: player))
-            } label: {
-                PlayerRowView(player: player)
-            }
-            .swipeActions {
-                Button(role: .destructive) {
-                    UserDefaultsManager.shared.remove(with: player.id)
-                    players = UserDefaultsManager.shared.players
+            switch listMode {
+            case .detail:
+                NavigationLink {
+                    PlayerView(viewModel: CreateUserViewModel(player: player))
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    PlayerRowView(player: player)
                 }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        UserDefaultsManager.shared.removePlayer(withId: player.id)
+                        players = UserDefaultsManager.shared.players
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            case .selecting:
+                Button {
+                    viewModel.addPlayer(player)
+                    viewModel.saveTeam(viewModel.team)
+                    dismiss()
+                } label: {
+                    PlayerRowView(player: player)
+                }
+            
             }
+            
         }
         .onAppear {
             players = UserDefaultsManager.shared.players

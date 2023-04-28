@@ -8,7 +8,7 @@
 import SwiftUI
 
     
-struct Player: Identifiable, Codable {
+struct Player: Identifiable, Codable, Hashable {
     let id: UUID
     var firstName: String
     var lastName: String
@@ -32,27 +32,83 @@ class CreateUserViewModel: ObservableObject {
 }
 
 struct Team: Identifiable, Codable {
-    var id = UUID()
-    let name: String
-    let players: [Player]?
+    let id: UUID
+    var name: String
+    var players = [Player]()
 //    var isSelected = false
 }
 
-class CreateTeamViewModel: ObservableObject {
+class TeamViewModel: ObservableObject {
     
     @Published var team: Team
     
+    @Published var teamsToPlay = [Team]()
+    
+
     init() {
-        team = Team(id: UUID(), name: "", players: nil)
+        team = Team(id: UUID(), name: "Team 1")
     }
     
     init(team: Team) {
         self.team = team
     }
     
-    func saveTeam(_ team: Team) {
-//        UserDefaultsManager.shared.addPlayer(team)
+    func selectTeam() {
+        if teamsToPlay.count < 2 {
+            teamsToPlay.append(team)
+        } else {
+            teamsToPlay.removeFirst()
+            teamsToPlay.append(team)
+        }
+        print(teamsToPlay.count)
     }
+    
+    func deselectTeam() {
+        var count = 0
+        teamsToPlay.forEach { item in
+            if item.id == team.id {
+                teamsToPlay.remove(at: count)
+                count += 1
+            }
+        }
+        print(teamsToPlay.count)
+    }
+    
+    func removePlayer(_ player: Player) {
+        var count = 0
+        team.players.forEach({ i in
+            if i.id == player.id { team.players.remove(at: count) }
+            count += 1
+        })
+    }
+    
+    func getIndex(for player: Player) -> Int {
+        var result = 0
+        var count = 0
+        team.players.forEach({ i in
+            if i.id == player.id { result = count }
+            count += 1
+        })
+        return result
+    }
+    
+    func addPlayer(_ player: Player) {
+                
+        guard team.players.count < 6 else { return }
+        var count = 0
+        team.players.forEach({ i in
+            if i.id == player.id { team.players.remove(at: count) }
+            count += 1
+        })
+        team.players.append(player)
+    }
+    
+    
+    func saveTeam(_ team: Team) {
+        UserDefaultsManager.shared.addTeam(team)
+//        print(team.isSelected)
+    }
+    
 }
 
 

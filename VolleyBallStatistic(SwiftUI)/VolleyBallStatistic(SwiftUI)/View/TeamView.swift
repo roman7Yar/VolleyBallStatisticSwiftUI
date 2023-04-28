@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct TeamView: View {
-    @State var teamName = "Team 1"
+    @ObservedObject var teamViewModel: TeamViewModel
+    
+    @State private var isPresented = false
+
     var layer = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -21,33 +24,41 @@ struct TeamView: View {
                 .foregroundColor(.myGreen)
             VStack {
                 ZStack {
-                    Text(teamName)
+                    Text(teamViewModel.team.name)
                         .font(.system(size: 60))
                         .foregroundColor(.myWhite)
-                    TextField("Team name", text: $teamName)
+                    TextField("Team name", text: $teamViewModel.team.name)
                         .foregroundColor(.clear)
                         .padding(.leading, 100)
                 }
                 .padding()
                 LazyVGrid(columns: layer) {
-                    PlayerItem2()
-                    PlayerItem2()
-                    PlayerItem2()
-                    PlayerItem2()
-                    PlayerItem2()
-                    NavigationLink {
-                        PlayerListView()
-                    } label: {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                            .padding(8)
-                            .background(Color.myYellow)
-                            .foregroundColor(.myWhite)
-                            .cornerRadius(50)
+                    if let players = teamViewModel.team.players {
+                        ForEach(players) { player in
+                            Button {
+                                teamViewModel.removePlayer(player)
+                            } label: {
+                                PlayerItem2(player: player)
+                            }
+                        }
                     }
-                    .padding(.bottom, 48)
-                    
+                    if teamViewModel.team.players.count < 6 {
+                        Button {
+                            isPresented = true
+                        } label: {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .padding(8)
+                                .background(Color.myYellow)
+                                .foregroundColor(.myWhite)
+                                .cornerRadius(50)
+                        }
+                        .padding(.bottom, 48)
+                        .sheet(isPresented: $isPresented) {
+                            PlayerListView(listMode: .selecting, viewModel: teamViewModel)
+                        }
+                    }
                 }
                 Spacer()
             }
@@ -57,23 +68,38 @@ struct TeamView: View {
             UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             AppDelegate.orientationLock = .portrait
         }
+        .onDisappear {
+            teamViewModel.saveTeam(teamViewModel.team)
+        }
         
     }
     
     struct PlayerItem2: View {
-        
+        private let pictures = UserDefaultsManager.shared.pictures
+        private let circleSize = CGFloat(80)
+        var player: Player
         var body: some View {
             VStack {
                 ZStack {
                     Circle()
-                        .frame(width: 80, height: 80)
+                        .frame(width: circleSize, height: circleSize)
                         .foregroundColor(.myWhite)
-                    Text("N")
+                    Text("\(firstChar(of: player.firstName))" +
+                         "\(firstChar(of: player.lastName))")
                         .font(.system(size: 50))
                         .foregroundColor(.myGreen)
+                    if let profilePicture = pictures[player.id] {
+                        Image(uiImage: UIImage(data: profilePicture)!)
+                            .resizable()
+                            .frame(width: circleSize, height: circleSize)
+                            .clipShape(Circle())
+                    }
                 }
-                Text("Name")
-                    .font(.system(size: 30))
+                Text("\(player.firstName)")
+                    .font(.system(size: 20))
+                    .foregroundColor(.myWhite)
+                Text("\(player.lastName)")
+                    .font(.system(size: 20))
                     .foregroundColor(.myWhite)
             }
         }
@@ -84,7 +110,7 @@ struct TeamView: View {
 
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView()
+        TeamView(teamViewModel: TeamViewModel())
     }
 }
 
