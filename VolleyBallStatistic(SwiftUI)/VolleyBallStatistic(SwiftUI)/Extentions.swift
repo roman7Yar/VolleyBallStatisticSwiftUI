@@ -19,4 +19,13 @@ extension Color {
     public static let mySegmentBG: Color = Color(UIColor(red: 17/255, green: 134/255, blue: 87/255, alpha: 1))
     public static let myBlack: Color = Color(UIColor(red: 34/255, green: 34/255, blue: 34/255, alpha: 1))
     
+    public static var myRandomGreen: Color {
+        let redValue = Double.random(in: 0.2...0.65)
+        let blueValue = Double.random(in: 0.2...0.65)
+        let greenValue = Double.random(in: 0.8...0.9)
+        return Color(red: redValue, green: greenValue, blue: blueValue)
+    }
+    
+
+    
 }

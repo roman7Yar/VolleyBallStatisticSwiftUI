@@ -7,7 +7,13 @@
 
 import SwiftUI
 
+enum GameType: String, CaseIterable {
+    case short = "15"
+    case long = "25"
+}
+
 struct SettingsView: View {
+    @ObservedObject var gameVM: GameViewModel
     @State private var selectedSegmentIndex = 0
     let segmentItems = ["15", "25"]
     
@@ -30,13 +36,13 @@ struct SettingsView: View {
                 VStack {
                     Text("Count to")
                         .foregroundColor(.myWhite)
-                    Picker("", selection: $selectedSegmentIndex) {
-                        ForEach(0..<segmentItems.count) { index in
-                            Text(segmentItems[index])
-                                .tag(index)
+                    Picker("", selection: $gameVM.selectedType) {
+                        ForEach(GameType.allCases, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
+//                    GameViewModel(scoreTo: selectedSegmentIndex)
                 }
                 .padding()
                 .padding(.horizontal, 80)
@@ -55,11 +61,11 @@ struct SettingsView: View {
 
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingsView()
+//    }
+//}
 
 struct TeamRow: View {
     var body: some View {

@@ -22,6 +22,9 @@
 		C37975E129D4881F0008E068 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E029D4881F0008E068 /* PlayerListView.swift */; };
 		C37975E329D592890008E068 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E229D592890008E068 /* UserDefaultsManager.swift */; };
 		C37975E529D5CBD30008E068 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37975E429D5CBD20008E068 /* PhotoPicker.swift */; };
+		C3928D5529FD3198007073C5 /* TeamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3928D5429FD3196007073C5 /* TeamModel.swift */; };
+		C3928D5729FD33F9007073C5 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3928D5629FD33F9007073C5 /* GameModel.swift */; };
+		C3928D5929FD3445007073C5 /* StatisticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3928D5829FD3445007073C5 /* StatisticManager.swift */; };
 		C3B44EEA29F2C05B00ABA875 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B44EE929F2C05B00ABA875 /* GameView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +45,9 @@
 		C37975E029D4881F0008E068 /* PlayerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
 		C37975E229D592890008E068 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		C37975E429D5CBD20008E068 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
+		C3928D5429FD3196007073C5 /* TeamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamModel.swift; sourceTree = "<group>"; };
+		C3928D5629FD33F9007073C5 /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
+		C3928D5829FD3445007073C5 /* StatisticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticManager.swift; sourceTree = "<group>"; };
 		C3B44EE929F2C05B00ABA875 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +66,8 @@
 			isa = PBXGroup;
 			children = (
 				C37975DC29D464110008E068 /* PlayerModel.swift */,
+				C3928D5629FD33F9007073C5 /* GameModel.swift */,
+				C3928D5429FD3196007073C5 /* TeamModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -89,6 +97,7 @@
 				C37975E429D5CBD20008E068 /* PhotoPicker.swift */,
 				C353C1F729F69F75000E15CE /* Extentions.swift */,
 				C37975E229D592890008E068 /* UserDefaultsManager.swift */,
+				C3928D5829FD3445007073C5 /* StatisticManager.swift */,
 				C37975D229D2FF8E0008E068 /* Assets.xcassets */,
 				C37975D429D2FF8E0008E068 /* Preview Content */,
 			);
@@ -193,13 +202,16 @@
 				C353C1F429F66CC7000E15CE /* StatisticView.swift in Sources */,
 				C37975E129D4881F0008E068 /* PlayerListView.swift in Sources */,
 				C37975D129D2FF850008E068 /* ContentView.swift in Sources */,
+				C3928D5929FD3445007073C5 /* StatisticManager.swift in Sources */,
 				C37975E329D592890008E068 /* UserDefaultsManager.swift in Sources */,
+				C3928D5729FD33F9007073C5 /* GameModel.swift in Sources */,
 				C37975DD29D464110008E068 /* PlayerModel.swift in Sources */,
 				C353C1F829F69F75000E15CE /* Extentions.swift in Sources */,
 				C37975CF29D2FF850008E068 /* VolleyBallStatistic_SwiftUI_App.swift in Sources */,
 				C3B44EEA29F2C05B00ABA875 /* GameView.swift in Sources */,
 				C353C1EF29F66B8A000E15CE /* TeamListView.swift in Sources */,
 				C37975DF29D47ABC0008E068 /* PlayerView.swift in Sources */,
+				C3928D5529FD3198007073C5 /* TeamModel.swift in Sources */,
 				C353C1ED29F66A7C000E15CE /* TeamView.swift in Sources */,
 				C353C1F629F66CEC000E15CE /* GamesListView.swift in Sources */,
 				C353C1F129F66BF4000E15CE /* SettingsView.swift in Sources */,

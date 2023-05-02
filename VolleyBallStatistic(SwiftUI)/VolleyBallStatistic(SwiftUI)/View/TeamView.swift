@@ -76,7 +76,7 @@ struct TeamView: View {
     
     struct PlayerItem2: View {
         private let pictures = UserDefaultsManager.shared.pictures
-        private let circleSize = CGFloat(80)
+        private let circleSize = CGFloat(100)
         var player: Player
         var body: some View {
             VStack {
@@ -87,7 +87,7 @@ struct TeamView: View {
                     Text("\(firstChar(of: player.firstName))" +
                          "\(firstChar(of: player.lastName))")
                         .font(.system(size: 50))
-                        .foregroundColor(.myGreen)
+                        .foregroundColor(.myRandomGreen)
                     if let profilePicture = pictures[player.id] {
                         Image(uiImage: UIImage(data: profilePicture)!)
                             .resizable()
@@ -103,9 +103,7 @@ struct TeamView: View {
                     .foregroundColor(.myWhite)
             }
         }
-        
     }
-
 }
 
 struct TeamView_Previews: PreviewProvider {

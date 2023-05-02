@@ -26,7 +26,7 @@ struct PlayerView: View {
                     Text("\(firstChar(of: viewModel.player.firstName))" +
                          "\(firstChar(of: viewModel.player.lastName))")
                     .font(.system(size: 90))
-                    .foregroundColor(.myLightGreen)
+                    .foregroundColor(.myRandomGreen)
                     .bold()
                     if let profilePicture = pictures[viewModel.player.id] {
                         Image(uiImage: UIImage(data: profilePicture)!)
@@ -51,16 +51,16 @@ struct PlayerView: View {
                     TextField("Імʼя", text: $viewModel.player.firstName)
                         .padding(4)
                         .background(Color.myWhite)
+                        .foregroundColor(.myBlack)
                         .cornerRadius(4)
                         .padding(.horizontal, 32)
                     TextField("Прізвище", text: $viewModel.player.lastName)
                         .padding(4)
                         .background(Color.myWhite)
+                        .foregroundColor(.myBlack)
                         .cornerRadius(4)
-
                         .padding(.horizontal, 32)
                 }
-//                .foregroundColor(Color.clear)
                 .frame(maxHeight: 160)
                 Spacer()
                 Button {

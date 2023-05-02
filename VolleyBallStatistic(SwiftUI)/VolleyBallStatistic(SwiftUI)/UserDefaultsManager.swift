@@ -12,6 +12,7 @@ class UserDefaultsManager {
     let playersKey = "players"
     let teamsKey = "teams"
     let picturesKey = "pictures"
+    let gamesKey = "games"
    
     private init() {
             UserDefaults.standard.register(defaults: [
@@ -161,6 +162,48 @@ class UserDefaultsManager {
             print("Unable to Encode Array of Data (\(error))")
         }
     }
+    
+    var games: [Game] {
+        get {
+            var games = [Game]()
+           
+            if let data = UserDefaults.standard.data(forKey: gamesKey) {
+                do {
+                    let decoder = JSONDecoder()
+                    
+                    let decodeData = try decoder.decode([Game].self, from: data)
+                    
+                    games = decodeData
+
+                } catch {
+                    print("Unable to Decode Data (\(error))")
+                }
+            }
+            return games
+        }
+    }
+    
+    func addGame(_ game: Game) {
+        var games = UserDefaultsManager.shared.games
+        var count = 0
+        games.forEach { item in
+            if item.start == game.start {
+                games.remove(at: count)
+            }
+            count += 1
+        }
+        games.insert(game, at: 0)
+
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(games)
+            UserDefaults.standard.set(data, forKey: gamesKey)
+        } catch {
+            print("Unable to Encode Array of Data (\(error))")
+        }
+    }
+
+
 
 
 }

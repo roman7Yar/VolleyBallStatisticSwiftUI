@@ -94,7 +94,11 @@ struct MenuView: View {
                 } label: {
                     MenuButton(title: "New game")
                 }
-                MenuButton(title: "Statistics")
+                NavigationLink {
+                    GamesListView()
+                } label: {
+                    MenuButton(title: "Statistics")
+                }
                 NavigationLink {
                     PlayerListView()
                 } label: {

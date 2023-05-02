@@ -44,7 +44,7 @@ struct PlayerListView: View {
                 } label: {
                     PlayerRowView(player: player)
                 }
-            
+                .foregroundColor(.primary)
             }
             
         }
@@ -78,7 +78,7 @@ struct PlayerRowView: View {
                 Circle()
                     .frame(width: 50, height: 50
                     )
-                    .foregroundColor(.myLightGreen)
+                    .foregroundColor(.myRandomGreen)
                 Text("\(firstChar(of: player.firstName))" +
                      "\(firstChar(of: player.lastName))")
                 .font(.system(size: 20))
@@ -91,11 +91,11 @@ struct PlayerRowView: View {
                         .clipShape(Circle())
                 }
             }
-            VStack(alignment: .leading) {
-                Text(player.firstName)
-                    .font(.headline)
-                Text(player.lastName)
-                    .font(.headline)
+            VStack(alignment: .trailing) {
+                Text(player.fullName)
+//                    .font(.headline)
+//                Text(player.lastName)
+//                    .font(.headline)
             }
         }
     }
