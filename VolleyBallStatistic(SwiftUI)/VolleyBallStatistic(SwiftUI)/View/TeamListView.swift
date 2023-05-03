@@ -41,8 +41,7 @@ struct TeamListView: View {
                         }
                 }
                 NavigationLink {
-                    TeamView(teamViewModel: TeamViewModel()
-                    )
+                    TeamView(teamViewModel: TeamViewModel())
                 } label: {
                     Image(systemName: "plus")
                         .resizable()

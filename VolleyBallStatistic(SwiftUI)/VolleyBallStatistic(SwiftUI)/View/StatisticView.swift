@@ -32,6 +32,9 @@ struct StatisticView: View {
                             .foregroundColor(.myWhite)
                             .bold()
                     }
+                    TeamSummaryView(manager: game)
+                    PlayerSummaryView(manager: game, teamIndex: 0)
+                    PlayerSummaryView(manager: game, teamIndex: 1)
                 }
                 .padding()
             }
@@ -52,11 +55,13 @@ struct StatisticView: View {
                                 Spacer()
                                 Text(team.name)
                                     .font(.title2)
+                                    .foregroundColor(.myBlack)
                                     .bold()
                                 Spacer()
                             }
                             ForEach(team.players) { player in
                                 PlayerRowView(player: player)
+                                    .foregroundColor(.myBlack)
                             }
                         }
                         .padding()
@@ -80,6 +85,11 @@ struct StatisticView: View {
                     .padding()
                 HStack {
                     Text(manager.game.team1.name)
+                        .font(.title2)
+                        .foregroundColor(.myWhite)
+                        .bold()
+                    Spacer()
+                    Text(manager.totalScore())
                         .font(.title2)
                         .foregroundColor(.myWhite)
                         .bold()
@@ -139,8 +149,125 @@ struct StatisticView: View {
             }
         }
     }
+    struct TeamSummaryView: View {
+        var manager: StatisticManager
+        @State private var selectedTeamIndex = 0
+        
+        var body: some View {
+            VStack {
+                Text("Teams Summary")
+                    .font(.title)
+                    .foregroundColor(.myWhite)
+                    .bold()
+                VStack {
+                    //segmented picker
+                    Picker("Select a team", selection: $selectedTeamIndex) {
+                        ForEach(0..<manager.teams.count) { index in
+                            Text(manager.teams[index].name)
+                                .bold()
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding([.top, .horizontal])
+                    HStack(alignment: .top) {
+                        VStack {
+                            Text("Success")
+                                .bold()
+                                .padding(.bottom, 8)
+                            ForEach(manager.getSuccess(for: manager.teams[selectedTeamIndex]), id: \.0) { success in
+                                HStack {
+                                    Text(success.0)
+                                    Spacer()
+                                    Text(success.1)
+                                }
+                            }
+                        }
+                        .padding()
+                        VStack {
+                            Text("Oppoennt Errors")
+                                .bold()
+                                .padding(.bottom, 8)
+                            ForEach(manager.getErrors(for: manager.teams[selectedTeamIndex]), id: \.0) { error in
+                                HStack {
+                                    Text(error.0)
+                                    Spacer()
+                                    Text(error.1)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .foregroundColor(.myBlack)
+                }
+                .background(Color.myWhite)
+                .cornerRadius(20)
+            }
+        }
+    }
+    struct PlayerSummaryView: View {
+        var manager: StatisticManager
+        let teamIndex: Int
+        @State private var index = 0 // використовуємо @State для збереження стану index
+        var currentPlayer: Player {
+            manager.teams[teamIndex].players[index]
+        }
+        var body: some View {
+            VStack {
+                Text(manager.teams[teamIndex].name)
+                    .font(.title2)
+                    .foregroundColor(.myWhite)
+                    .bold()
+                VStack {
+                    HStack {
+                        Button {
+                            // зменшуємо index на 1, якщо можливо
+                            if index > 0 {
+                                index -= 1
+                            }
+                        } label: {
+                            Image(systemName: "chevron.backward")
+                                .foregroundColor(.myWhite)
+                                .padding()
+                                .background(Color.myLightGreen)
+                                .clipShape(Circle())
+                        }
+                        Spacer()
+                        Text(currentPlayer.fullName)
+                            .font(.title2)
+                        Spacer()
+                        Button {
+                            if index < manager.teams[teamIndex].players.count - 1 {
+                                index += 1
+                            }
+                        } label: {
+                            Image(systemName: "chevron.forward")
+                                .foregroundColor(.myWhite)
+                                .padding()
+                                .background(Color.myLightGreen)
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding()
+                    VStack(alignment: .leading) {
+                        ForEach(manager.getPlayerSummary(for: currentPlayer), id: \.0) { element in
+                            HStack {
+                                Text(element.0)
+                                    .padding(.leading, 80)
+                                Spacer()
+                                Text(element.1)
+                                    .padding(.trailing, 80)
+                            }
+                        }
+                    }
+                    .padding(.bottom)
+                }
+                .background(Color.myWhite)
+                .foregroundColor(.myBlack)
+                .cornerRadius(20)
+            }
+        }
+    }
 }
-
 //struct StatisticView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        StatisticView(game: )

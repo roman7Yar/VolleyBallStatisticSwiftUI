@@ -20,21 +20,26 @@ class StatisticManager {
     }
     
     func getTime(for event: GameEvent) -> String {
-       
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "mm:ss"
-       
+        
         let timeDifference = Int(event.date.timeIntervalSince(game.start))
         let formattedTime = dateFormatter.string(from: Date(timeIntervalSince1970: Double(timeDifference)))
-
+        
         return formattedTime
+    }
+    
+    func totalScore() -> String {
+        let score = getScore(for: events.last!)
+        return "\(score[0]):\(score[1])"
     }
     
     func getScore(for event: GameEvent) -> [String] {
         var firstTeamScore = 0
         var secondTeamScore = 0
         let breakDate = event.date
-       
+        
         var index = 0
         
         while index < events.count && events[index].date <= breakDate {
@@ -46,7 +51,7 @@ class StatisticManager {
             }
             index += 1
         }
-
+        
         return [String(firstTeamScore), String(secondTeamScore)]
     }
     
@@ -67,42 +72,91 @@ class StatisticManager {
                 }
             }
             previousDate = event.date
-
+            
         }
         let result = dateFormatter.string(from: Date(timeIntervalSince1970: Double(longestTimeInterval)))
         return result
     }
     
-//    func getMain(for team: TeamType) -> [String : Int] {
-//
-//        let attacks = calculate(eventType: .win(.attack), for: team)
-//        let blocks = calculate(eventType: .win(.block), for: team)
-//        let aces = calculate(eventType: .win(.ace), for: team)
-//        let opponentMistakes = numberOfEvents(for: team) - (attacks + blocks + aces)
-//
-//        return ["Attacks" : attacks,
-//                "Blocks" : blocks,
-//                "Aces" : aces,
-//                "Opponent mistakes" : opponentMistakes]
-//    }
-//
-//    func numberOfEvents(for team: TeamType) -> Int {
-//        var count = 0
-//
-//        for event in events {
-//            if event.team.oposit == team { count += 1 }
-//        }
-//
-//        return count
-//    }
+    func getSuccess(for team: Team) -> [(String, String)] {
+        
+        let attacks = calculate(eventType: .win(.attack), for: team)
+        let blocks = calculate(eventType: .win(.block), for: team)
+        let aces = calculate(eventType: .win(.serve), for: team)
+        let all = attacks + blocks + aces
+        
+        return [("Attacks", String(attacks)),
+                ("Blocks", String(blocks)),
+                ("Serves", String(aces)),
+                ("", ""),
+                ("All", String(all))]
+    }
     
-//    func calculate(eventType type: EventType, for team: TeamType) -> Int {
-//        var count = 0
-//      
-//        for event in events {
-//            if event.type == type && event.team.oposit == team { count += 1 }
-//        }
-//      
-//        return 0
-//    }
+    func getErrors(for team: Team) -> [(String, String)] {
+        
+        let serve = calculate(eventType: .error(.serve), for: team)
+        let line = calculate(eventType: .error(.line), for: team)
+        let net = calculate(eventType: .error(.net), for: team)
+        let out = calculate(eventType: .error(.out), for: team)
+        let other = calculate(eventType: .error(.other), for: team)
+        let all = serve + line + net + out + other
+        
+        return [("Serve", String(serve)),
+                ("Line", String(line)),
+                ("Net",String(net)),
+                ("Out", String(out)),
+                ("Other", String(other)),
+                ("", ""),
+                ("All", String(all))]
+    }
+    
+    
+    private func numberOfEvents(for player: Player) -> Int {
+        var count = 0
+        
+        for event in events {
+            if let eventPlayer = event.player {
+                if eventPlayer.id == player.id { count += 1 }
+            }
+        }
+        
+        return count
+    }
+    
+    private func calculate(eventType type: EventType, for team: Team) -> Int {
+        var count = 0
+        
+        for event in events {
+            if event.type == type && event.team.id == team.id { count += 1 }
+        }
+        
+        return count
+    }
+    
+    func getPlayerSummary(for player: Player) -> [(String, String)] {
+            
+        let attacks = calculate(eventType: .win(.attack), for: player)
+        let blocks = calculate(eventType: .win(.block), for: player)
+        let serves = calculate(eventType: .win(.serve), for: player)
+        let errors = numberOfEvents(for: player) - (attacks + blocks + serves)
+
+        return [("Attacks", String(attacks)),
+                ("Blocks", String(blocks)),
+                ("Serves", String(serves)),
+                ("", ""),
+                ("Errors", String(errors))]
+        }
+    
+    private func calculate(eventType type: EventType, for player: Player) -> Int {
+        var count = 0
+        
+        for event in events {
+            if let eventPlayer = event.player {
+                if event.type == type && eventPlayer.id == player.id { count += 1 }
+            }
+        }
+        return count
+    }
+
+
 }
