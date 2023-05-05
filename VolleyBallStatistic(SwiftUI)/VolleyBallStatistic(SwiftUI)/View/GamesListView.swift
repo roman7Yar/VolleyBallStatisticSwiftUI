@@ -25,9 +25,17 @@ struct GameRowView: View {
     var game: Game
     var body: some View {
         HStack {
-            Text("\(game.team1.name) - \(game.team2.name)")
-            Divider()
             Text(game.start.formatted())
+                .font(.headline)
+                .foregroundColor(.gray)
+
+            Divider()
+
+            Text("\(game.team1.name) - \(game.team2.name)")
+                .font(.headline)
+                .fontWeight(.bold)
+
+            
         }
     }
 }

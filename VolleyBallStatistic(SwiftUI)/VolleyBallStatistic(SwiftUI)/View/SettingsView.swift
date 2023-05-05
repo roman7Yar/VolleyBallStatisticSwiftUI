@@ -46,8 +46,8 @@ struct SettingsView: View {
                 }
                 .padding()
                 .padding(.horizontal, 80)
-                TeamRow()
-                TeamRow()
+                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
+                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
                 Spacer()
             }
         }
@@ -68,14 +68,15 @@ struct SettingsView: View {
 //}
 
 struct TeamRow: View {
+    @ObservedObject var teamVM: TeamViewModel
     var body: some View {
         HStack(spacing: 40) {
-            Text("Team 1")
+            Text(teamVM.team.name)
                 .font(.system(size: 32))
                 .foregroundColor(.white)
-//            NavigationLink {
-//                TeamView()
-//            } label: {
+            NavigationLink {
+                TeamView(teamViewModel: teamVM)
+            } label: {
                 Text("Edit")
                     .font(.system(size: 24))
                     .foregroundColor(.white)
@@ -83,8 +84,8 @@ struct TeamRow: View {
                     .padding(.horizontal, 40)
                     .background(Color.yellow)
                     .cornerRadius(8)
-//                
-//            }
+                
+            }
             
         }
     }

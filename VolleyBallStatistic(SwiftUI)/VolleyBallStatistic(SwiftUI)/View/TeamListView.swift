@@ -50,6 +50,7 @@ struct TeamListView: View {
                         .background(Color.myYellow)
                         .foregroundColor(.myWhite)
                         .cornerRadius(50)
+                        .shadow(radius: 12, y: 4)
                 }
                 .padding()
             }
@@ -66,6 +67,7 @@ struct TeamListView: View {
                             .background(Color.myYellow)
                             .foregroundColor(.myWhite)
                             .cornerRadius(8)
+                            .shadow(radius: 12, y: 9)
                             .padding()
                     }
                 }
@@ -86,7 +88,7 @@ struct TeamItem: View {
     @ObservedObject var teamViewModel: TeamViewModel
     @ObservedObject var game: GameModel
     
-    @State private var isSelected = false
+    @State var isSelected = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -98,6 +100,7 @@ struct TeamItem: View {
                     .frame(minWidth: 300, minHeight: 160)
                     .foregroundColor(.white)
                     .cornerRadius(25)
+                    .shadow(radius: 12, y: 9)
                 VStack {
                     ScrollView(.horizontal) {
                         HStack(spacing: 8) {
@@ -128,10 +131,10 @@ struct TeamItem: View {
                                 game.deselectTeam(teamViewModel)
                             }
                         } label: {
-                            Image(systemName: isSelected ? "star.fill" : "star")
+                            Image(systemName: game.chekSelection(teamViewModel) ? "star.fill" : "star")
                                 .resizable()
                                 .frame(width: 30, height: 30)
-                                .foregroundColor(isSelected ? .myYellow : .myDarkGray)
+                                .foregroundColor(game.chekSelection(teamViewModel) ? .myYellow : .myDarkGray)
                         }
                     }
                     .padding([.horizontal, .bottom], 20)

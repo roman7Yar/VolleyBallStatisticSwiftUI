@@ -14,6 +14,11 @@ struct GameView: View {
     
     @ObservedObject var gameVM: GameViewModel
     
+    @State private var gameTime = 0.0
+
+    let timer = Timer.publish(every: 1, on: .main, in: .common)
+        .autoconnect()
+
     var isLandscape: Bool { verticalSizeClass == .compact }
     
     var body: some View {
@@ -36,34 +41,6 @@ struct GameView: View {
                 }
             }
             VStack {
-                HStack(spacing: 20) {
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(.myDarkGray)
-                            .padding(.bottom)
-                            .padding(8)
-                    }
-                    
-//                    NavigationLink {
-//                        SettingsView()
-//                    } label: {
-//                        Image(systemName: "gearshape.fill")
-//                            .resizable()
-//                            .frame(width: 40, height: 40)
-//                            .foregroundColor(.myDarkGray)
-//                            .padding(.bottom)
-//                    }
-                    Spacer()
-                }
-                .padding(8)
-                Spacer()
-            }
-            .ignoresSafeArea()
-            VStack {
                 Spacer()
                 HStack(spacing: 32) {
                     Button {
@@ -71,7 +48,7 @@ struct GameView: View {
                     } label: {
                         Image(systemName: "arrow.uturn.left")
                     }
-                    Text("00:00")
+                    Text(String(format: "%.0f:%02.0f", gameTime/60, gameTime.truncatingRemainder(dividingBy: 60)))
                     NavigationLink {
                         SettingsView(gameVM: gameVM)
                     } label: {
@@ -82,8 +59,12 @@ struct GameView: View {
                 .background(Color.myWhite)
                 .foregroundColor(Color.myDarkGray)
                 .cornerRadius(10)
+                .shadow(radius: 12, y: 9)
                 .padding(24)
             }
+        }
+        .onReceive(timer) { _ in
+            gameTime += 1
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -96,7 +77,7 @@ struct GameView: View {
 //            AppDelegate.orientationLock = .portrait
             gameVM.saveGame()
         }
-        .navigationBarBackButtonHidden()
+//        .navigationBarBackButtonHidden()
     }
 }
 

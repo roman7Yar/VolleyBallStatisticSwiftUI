@@ -15,56 +15,66 @@ struct PlayerListView: View {
     
     @Environment(\.dismiss) var dismiss
     
-   @State private var players = UserDefaultsManager.shared.players
+    @State private var players = UserDefaultsManager.shared.players
+    @State private var searchText = ""
+
+    var filteredPlayers: [Player] {
+        if searchText.isEmpty {
+            return players
+        } else {
+            return players.filter { $0.firstName.localizedCaseInsensitiveContains(searchText) || $0.lastName.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+
     var listMode = ListMode.detail
-   @ObservedObject var viewModel = TeamViewModel()
+    @ObservedObject var viewModel = TeamViewModel()
     var index = 0
     var body: some View {
-        List(players) { player in
-            switch listMode {
-            case .detail:
-                NavigationLink {
-                    PlayerView(viewModel: CreateUserViewModel(player: player))
-                } label: {
-                    PlayerRowView(player: player)
-                }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        UserDefaultsManager.shared.removePlayer(withId: player.id)
-                        players = UserDefaultsManager.shared.players
+        VStack {
+            TextField("Search", text: $searchText)
+                .padding(.leading, 10)
+                .padding(.vertical, 4)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding([.horizontal, .top])
+            List(filteredPlayers) { player in
+                switch listMode {
+                case .detail:
+                    NavigationLink {
+                        PlayerView(viewModel: CreateUserViewModel(player: player))
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        PlayerRowView(player: player)
                     }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            UserDefaultsManager.shared.removePlayer(withId: player.id)
+                            players = UserDefaultsManager.shared.players
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                case .selecting:
+                    Button {
+                        viewModel.addPlayer(player)
+                        dismiss()
+                    } label: {
+                        PlayerRowView(player: player)
+                    }
+                    .foregroundColor(.primary)
                 }
-            case .selecting:
-                Button {
-                    viewModel.addPlayer(player)
-                    viewModel.saveTeam(viewModel.team)
-                    dismiss()
-                } label: {
-                    PlayerRowView(player: player)
-                }
-                .foregroundColor(.primary)
+                
             }
+            .onAppear {
+                players = UserDefaultsManager.shared.players
+            }
+            .navigationTitle("Гравці")
             
+            .navigationBarItems(trailing: NavigationLink {
+                PlayerView(viewModel: CreateUserViewModel())
+            } label: {
+                Image(systemName: "plus.circle")
+            })
         }
-        .onAppear {
-            players = UserDefaultsManager.shared.players
-        }
-        .navigationTitle("Гравці")
-        
-        .navigationBarItems(trailing: NavigationLink {
-            PlayerView(viewModel: CreateUserViewModel())
-        } label: {
-            Image(systemName: "plus.circle")
-        })
-        
-//        .navigationBarItems(trailing: Button {
-//            UserDefaultsManager.shared.removeLast()
-//            players = UserDefaultsManager.shared.players
-//        } label: {
-//            Image(systemName: "minus.circle")
-//        })
     }
 }
 

@@ -69,6 +69,7 @@ struct StatisticView: View {
                 }
                 .background(Color.myWhite)
                 .cornerRadius(20)
+                .shadow(radius: 12, y: 9)
             }
         }
     }
@@ -142,6 +143,7 @@ struct StatisticView: View {
                             }
                             .foregroundColor(manager.game.team2.id == event.team.id ? Color.myBlack : Color.clear)
                             .padding(4)
+                            .shadow(radius: 12, y: 4)
                         }
                     }
                     //                    .padding(.vertical, 4)
@@ -201,6 +203,7 @@ struct StatisticView: View {
                 }
                 .background(Color.myWhite)
                 .cornerRadius(20)
+                .shadow(radius: 12, y: 9)
             }
         }
     }
@@ -264,6 +267,7 @@ struct StatisticView: View {
                 .background(Color.myWhite)
                 .foregroundColor(.myBlack)
                 .cornerRadius(20)
+                .shadow(radius: 12, y: 9)
             }
         }
     }

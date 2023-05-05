@@ -53,6 +53,8 @@ struct TeamView: View {
                                 .background(Color.myYellow)
                                 .foregroundColor(.myWhite)
                                 .cornerRadius(50)
+                                .shadow(radius: 12, y: 4)
+
                         }
                         .padding(.bottom, 48)
                         .sheet(isPresented: $isPresented) {
@@ -61,15 +63,25 @@ struct TeamView: View {
                     }
                 }
                 Spacer()
+                Button {
+                    teamViewModel.saveTeam(teamViewModel.team)
+                } label: {
+                    Text("Save")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(.horizontal)
+                        .background(Color.yellow)
+                        .cornerRadius(8)
+                        .shadow(radius: 12, y: 9)
+                }
+
             }
             .padding()
         }
         .onAppear {
             UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             AppDelegate.orientationLock = .portrait
-        }
-        .onDisappear {
-            teamViewModel.saveTeam(teamViewModel.team)
         }
         
     }

@@ -84,11 +84,14 @@ struct MenuView: View {
                     .multilineTextAlignment(.center)
                     .font(.system(size: 56))
                     .foregroundColor(.myWhite)
-                CustomSegmentedControl(preselectedIndex: $selectedSegment, options: ["score", "statistic", "extended"])
-                    .padding(.horizontal, 8)
-                Text(description)
-                    .padding(.vertical, -24)
-                    .foregroundColor(.myWhite)
+                    .shadow(radius: 12, y: 2)
+
+//                CustomSegmentedControl(preselectedIndex: $selectedSegment, options: ["score", "statistic", "extended"])
+//                    .padding(.horizontal, 8)
+//                Text(description)
+//                    .padding(.vertical, -24)
+//                    .foregroundColor(.myWhite)
+                Spacer()
                 NavigationLink {
                     TeamListView()
                 } label: {
