@@ -22,7 +22,7 @@ struct PlayerListView: View {
         if searchText.isEmpty {
             return players
         } else {
-            return players.filter { $0.firstName.localizedCaseInsensitiveContains(searchText) || $0.lastName.localizedCaseInsensitiveContains(searchText) }
+            return players.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
         }
     }
 
@@ -52,6 +52,7 @@ struct PlayerListView: View {
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
+                        .tint(.red)
                     }
                 case .selecting:
                     Button {

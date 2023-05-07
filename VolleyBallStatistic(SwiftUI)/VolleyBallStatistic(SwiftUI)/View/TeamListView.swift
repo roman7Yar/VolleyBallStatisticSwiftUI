@@ -74,11 +74,14 @@ struct TeamListView: View {
             }
         }
         .onAppear {
+            AppDelegate.orientationLock = .portrait
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                AppDelegate.orientationLock = .portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 teams = UserDefaultsManager.shared.teams
             }
+        }
+        .onDisappear {
+            game.teams.removeAll()
         }
     }
 }
@@ -131,10 +134,19 @@ struct TeamItem: View {
                                 game.deselectTeam(teamViewModel)
                             }
                         } label: {
-                            Image(systemName: game.chekSelection(teamViewModel) ? "star.fill" : "star")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(game.chekSelection(teamViewModel) ? .myYellow : .myDarkGray)
+                            if game.chekSelection(teamViewModel) {
+                                Image(systemName: "checkmark")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.myYellow)
+                            } else {
+                                Text("Select")
+                                    .foregroundColor(.myYellow)
+                            }
+//                            Image(systemName: game.chekSelection(teamViewModel) ? "star.fill" : "star")
+//                                .resizable()
+//                                .frame(width: 30, height: 30)
+//                                .foregroundColor(game.chekSelection(teamViewModel) ? .myYellow : .myDarkGray)
                         }
                     }
                     .padding([.horizontal, .bottom], 20)
@@ -142,6 +154,9 @@ struct TeamItem: View {
             }
         }
         .padding([.horizontal, .bottom])
+        .onDisappear {
+            isSelected = false
+        }
     }
 }
 

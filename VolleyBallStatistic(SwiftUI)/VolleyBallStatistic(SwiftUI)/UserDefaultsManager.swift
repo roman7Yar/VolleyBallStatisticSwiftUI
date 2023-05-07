@@ -13,43 +13,43 @@ class UserDefaultsManager {
     let teamsKey = "teams"
     let picturesKey = "pictures"
     let gamesKey = "games"
-   
+    
     private init() {
-            UserDefaults.standard.register(defaults: [
-                playersKey : "",
-                picturesKey: [:]
-            ])
-        }
-        
-        static let shared = UserDefaultsManager()
-        // TODO: add playerColor
-        var pictures: [UUID: Data] {
-            get {
-                if let savedPictures = UserDefaults.standard.dictionary(forKey: picturesKey) as? [String: Data] {
-                    var pictures = [UUID: Data]()
-                    for (key, value) in savedPictures {
-                        if let uuid = UUID(uuidString: key) {
-                            pictures[uuid] = value
-                        }
+        UserDefaults.standard.register(defaults: [
+            playersKey : "",
+            picturesKey: [:]
+        ])
+    }
+    
+    static let shared = UserDefaultsManager()
+    // TODO: add playerColor
+    var pictures: [UUID: Data] {
+        get {
+            if let savedPictures = UserDefaults.standard.dictionary(forKey: picturesKey) as? [String: Data] {
+                var pictures = [UUID: Data]()
+                for (key, value) in savedPictures {
+                    if let uuid = UUID(uuidString: key) {
+                        pictures[uuid] = value
                     }
-                    return pictures
-                } else {
-                    return [:]
                 }
+                return pictures
+            } else {
+                return [:]
             }
-            set {
-                var dictionary = [String: Data]()
-                for (key, value) in newValue {
-                    dictionary[key.uuidString] = value
-                }
-                UserDefaults.standard.set(dictionary, forKey: picturesKey)
+        }
+        set {
+            var dictionary = [String: Data]()
+            for (key, value) in newValue {
+                dictionary[key.uuidString] = value
             }
+            UserDefaults.standard.set(dictionary, forKey: picturesKey)
+        }
     }
     
     var players: [Player] {
         get {
             var players = [Player(id: UUID(), firstName: "", lastName: "")]
-           
+            
             if let data = UserDefaults.standard.data(forKey: playersKey) {
                 do {
                     let decoder = JSONDecoder()
@@ -57,7 +57,7 @@ class UserDefaultsManager {
                     let decodeData = try decoder.decode([Player].self, from: data)
                     
                     players = decodeData
-
+                    
                 } catch {
                     print("Unable to Decode Data (\(error))")
                 }
@@ -85,7 +85,7 @@ class UserDefaultsManager {
             print("Unable to Encode Array of Data (\(error))")
         }
     }
-   
+    
     func removePlayer(withId id: UUID) {
         var players = UserDefaultsManager.shared.players
         var count = 0
@@ -107,7 +107,7 @@ class UserDefaultsManager {
     var teams: [Team] {
         get {
             var teams = [Team(id: UUID(), name: "")]
-           
+            
             if let data = UserDefaults.standard.data(forKey: teamsKey) {
                 do {
                     let decoder = JSONDecoder()
@@ -115,7 +115,7 @@ class UserDefaultsManager {
                     let decodeData = try decoder.decode([Team].self, from: data)
                     
                     teams = decodeData
-
+                    
                 } catch {
                     print("Unable to Decode Data (\(error))")
                 }
@@ -166,7 +166,7 @@ class UserDefaultsManager {
     var games: [Game] {
         get {
             var games = [Game]()
-           
+            
             if let data = UserDefaults.standard.data(forKey: gamesKey) {
                 do {
                     let decoder = JSONDecoder()
@@ -174,7 +174,7 @@ class UserDefaultsManager {
                     let decodeData = try decoder.decode([Game].self, from: data)
                     
                     games = decodeData
-
+                    
                 } catch {
                     print("Unable to Decode Data (\(error))")
                 }
@@ -193,7 +193,7 @@ class UserDefaultsManager {
             count += 1
         }
         games.insert(game, at: 0)
-
+        
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(games)
@@ -202,8 +202,23 @@ class UserDefaultsManager {
             print("Unable to Encode Array of Data (\(error))")
         }
     }
-
-
-
-
+    
+    func removeGame(withDate date: Date) {
+        var games = UserDefaultsManager.shared.games
+        var count = 0
+        games.forEach { game in
+            if game.start == date {
+                games.remove(at: count)
+            }
+            count += 1
+        }
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(games)
+            UserDefaults.standard.set(data, forKey: gamesKey)
+        } catch {
+            print("Unable to Encode Array of Data (\(error))")
+        }
+    }
+    
 }

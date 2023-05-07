@@ -17,9 +17,7 @@ class GameModel: ObservableObject {
     @Published var teams: [TeamViewModel] = []
     
     func chekSelection(_ teamVM: TeamViewModel) -> Bool {
-        let bool = teams.contains(where: { $0.team.id == teamVM.team.id })
-    print(bool)
-        return bool
+        return teams.contains(where: { $0.team.id == teamVM.team.id })
     }
     
     func selectTeam(_ team: TeamViewModel) {

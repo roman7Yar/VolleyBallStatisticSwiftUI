@@ -62,6 +62,12 @@ struct GameView: View {
                 .shadow(radius: 12, y: 9)
                 .padding(24)
             }
+            if gameVM.isShowingGameOver {
+                Text(gameVM.getWinner())
+                    .font(.largeTitle)
+                    .foregroundColor(.myWhite)
+                    .bold()
+            }
         }
         .onReceive(timer) { _ in
             gameTime += 1
@@ -129,6 +135,7 @@ struct TapView: View {
                                 ForEach(team.players) { player in
                                     Button("\(player.firstName) \(player.lastName)") {
                                         gameVM.newEvent(.init(type: .win(winType), team: team, player: player))
+                                        gameVM.checkIsGameOver()
                                     }
                                 }
                             }

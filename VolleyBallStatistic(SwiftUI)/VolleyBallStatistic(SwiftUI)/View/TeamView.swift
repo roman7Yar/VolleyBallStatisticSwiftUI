@@ -30,6 +30,7 @@ struct TeamView: View {
                     TextField("Team name", text: $teamViewModel.team.name)
                         .foregroundColor(.clear)
                         .padding(.leading, 100)
+                        .tint(.clear)
                 }
                 .padding()
                 LazyVGrid(columns: layer) {

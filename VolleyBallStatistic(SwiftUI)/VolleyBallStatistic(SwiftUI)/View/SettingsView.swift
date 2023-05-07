@@ -46,8 +46,17 @@ struct SettingsView: View {
                 }
                 .padding()
                 .padding(.horizontal, 80)
-                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
-                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
+                Text("Last 5 events:")
+                    .foregroundColor(.myWhite)
+                    .bold()
+                VStack(alignment: .leading) {
+                    ForEach(gameVM.getLastTenEvents(), id: \.self) { event in
+                        Text(event)
+                            .foregroundColor(.myWhite)
+                    }
+                }
+//                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
+//                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team2))
                 Spacer()
             }
         }

@@ -17,9 +17,10 @@ struct Game: Codable {
 class GameViewModel: ObservableObject {
     @Published var game: Game
     @Published var selectedType: GameType = .short
+    @Published var isShowingGameOver = false
     var scoreTo: Int {
         switch selectedType {
-        case .short: return 15
+        case .short: return 5
         case .long: return 25
         }
     }
@@ -52,6 +53,20 @@ class GameViewModel: ObservableObject {
             game.events.append(event)
         }
     }
+    
+    func checkIsGameOver() {
+        isShowingGameOver = isGameOver
+    }
+    
+    func getWinner() -> String {
+        if getScore(for: game.team1) > getScore(for: game.team2) {
+            return "\(game.team1.name) win!"
+        } else {
+            return "\(game.team2.name) win!"
+
+        }
+    }
+   
     func removeLastEvent() {
         if !game.events.isEmpty {
             game.events.removeLast()
@@ -66,6 +81,23 @@ class GameViewModel: ObservableObject {
             }
         }
         return score
+    }
+    
+    func getLastTenEvents() -> [String] {
+        let count = game.events.count
+        var result = [String]()
+        game.events.forEach { event in
+            result.append("\(event.team.name):  \(event.type.description)(\(event.player?.fullName ?? "-"))")
+        }
+        if count < 6 {
+            return result
+        } else {
+            let prefix = count - 5
+            for _ in 1...prefix {
+                result.removeFirst()
+            }
+            return result
+        }
     }
     func saveGame() {
         if isGameOver {
@@ -99,7 +131,7 @@ enum EventType: Codable, Equatable {
             case .line: return "Line"
             case .net: return "Net"
             case .out: return "Out"
-            case .serve: return "Serve\n(error)"
+            case .serve: return "Serve error"
             }
         }
     }

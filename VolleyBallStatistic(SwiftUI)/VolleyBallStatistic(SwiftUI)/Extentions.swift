@@ -29,3 +29,10 @@ extension Color {
 
     
 }
+
+extension Date {
+    func isSameDay(as date: Date) -> Bool {
+        let calendar = Calendar.current
+        return calendar.isDate(self, inSameDayAs: date)
+    }
+}
