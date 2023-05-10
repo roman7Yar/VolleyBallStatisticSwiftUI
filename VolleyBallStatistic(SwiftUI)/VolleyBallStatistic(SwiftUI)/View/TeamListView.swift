@@ -24,21 +24,6 @@ struct TeamListView: View {
                     .foregroundColor(.myWhite)
                 ForEach(teams) { team in
                     TeamItem(teamViewModel: TeamViewModel(team: team), game: game)
-                        .contextMenu {
-                            Button("Delete") {
-                                UserDefaultsManager.shared.removeTeam(withId: team.id)
-                                teams = UserDefaultsManager.shared.teams
-                            }
-                        }
-                        .swipeActions {
-                            Button {
-                                UserDefaultsManager.shared.removeTeam(withId: team.id)
-                                teams = UserDefaultsManager.shared.teams
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                            .tint(.red)
-                        }
                 }
                 NavigationLink {
                     TeamView(teamViewModel: TeamViewModel())
@@ -92,7 +77,8 @@ struct TeamItem: View {
     @ObservedObject var game: GameModel
     
     @State var isSelected = false
-    
+    @State private var isActive = false
+
     var body: some View {
         VStack(alignment: .leading) {
             
@@ -119,19 +105,6 @@ struct TeamItem: View {
                     }
                     
                     HStack {
-                        NavigationLink {
-                            TeamView(teamViewModel: TeamViewModel(team: teamViewModel.team))
-                        } label: {
-                            Text("Change")
-                                .font(.system(size: 24))
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.yellow)
-                                .cornerRadius(8)
-                        }
-                        
-                        Spacer()
-                        
                         Button {
                             isSelected.toggle()
                             if isSelected {
@@ -147,9 +120,34 @@ struct TeamItem: View {
                                     .foregroundColor(.myYellow)
                             } else {
                                 Text("Select")
-                                    .foregroundColor(.myYellow)
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(Color.yellow)
+                                    .cornerRadius(8)
                             }
                         }
+                        
+                        Spacer()
+                        
+                        Menu {
+                            Button("Edit") {
+                                isActive = true
+                            }
+                            Button("Delete", role: .destructive) {
+                                UserDefaultsManager.shared.removeTeam(withId: teamViewModel.team.id)
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24)
+                        }
+                        .background(
+                            NavigationLink("", isActive: $isActive) {
+                                TeamView(teamViewModel: TeamViewModel(team: teamViewModel.team))
+                            })
+
                     }
                     .padding([.horizontal, .bottom], 20)
                 }

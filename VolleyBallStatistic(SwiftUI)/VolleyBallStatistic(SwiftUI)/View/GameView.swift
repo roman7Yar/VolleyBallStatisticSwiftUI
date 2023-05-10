@@ -16,7 +16,7 @@ struct GameView: View {
     
     @State private var gameTime = 0.0
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common)
+    private let timer = Timer.publish(every: 1, on: .main, in: .common)
         .autoconnect()
     
     private var isLandscape: Bool { verticalSizeClass == .compact }
