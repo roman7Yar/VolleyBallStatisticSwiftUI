@@ -14,13 +14,7 @@ class UserDefaultsManager {
     let picturesKey = "pictures"
     let gamesKey = "games"
     
-    private init() {
-        UserDefaults.standard.register(defaults: [
-            playersKey : "",
-            picturesKey: [:],
-            gamesKey: []
-        ])
-    }
+    private init() { }
     
     static let shared = UserDefaultsManager()
     
@@ -61,7 +55,7 @@ class UserDefaultsManager {
     var players: [Player] {
         
         get {
-            var players = [Player(id: UUID(), firstName: "", lastName: "")]
+            var players = [Player]()
             
             if let data = UserDefaults.standard.data(forKey: playersKey) {
                 
@@ -132,7 +126,7 @@ class UserDefaultsManager {
         
         get {
             
-            var teams = [Team(id: UUID(), name: "")]
+            var teams = [Team]()
             
             if let data = UserDefaults.standard.data(forKey: teamsKey) {
                 
