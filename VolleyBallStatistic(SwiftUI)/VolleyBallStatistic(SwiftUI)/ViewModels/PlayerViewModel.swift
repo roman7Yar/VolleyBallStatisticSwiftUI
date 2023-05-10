@@ -22,4 +22,10 @@ class PlayerViewModel: ObservableObject {
     func savePlayer(_ player: Player) {
         UserDefaultsManager.shared.addPlayer(player)
     }
+    func checkErrors(_ player: Player) -> String? {
+        if player.fullName.trimmingCharacters(in: .whitespaces).isEmpty {
+            return "Player need name"
+        }
+        return nil
+    }
 }

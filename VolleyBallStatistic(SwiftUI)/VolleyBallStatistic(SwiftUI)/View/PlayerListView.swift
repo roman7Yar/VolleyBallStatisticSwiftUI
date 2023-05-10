@@ -33,54 +33,66 @@ struct PlayerListView: View {
     var listMode = ListMode.detail
     
     var body: some View {
-        
-        VStack {
-            TextField("Search", text: $searchText)
-                .padding(.leading, 10)
-                .padding(.vertical, 4)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                .padding([.horizontal, .top])
-            
-            List(filteredPlayers) { player in
+        ZStack {
+            VStack {
+                TextField("Search", text: $searchText)
+                    .padding(.leading, 10)
+                    .padding(.vertical, 4)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding([.horizontal, .top])
+                
                 switch listMode {
                 case .detail:
-                    NavigationLink {
-                        PlayerView(viewModel: PlayerViewModel(player: player))
-                    } label: {
-                        PlayerRowView(player: player)
-                    }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            UserDefaultsManager.shared.removePlayer(withId: player.id)
-                            players = UserDefaultsManager.shared.players
+                    List(filteredPlayers) { player in
+                        
+                        NavigationLink {
+                            PlayerView(viewModel: PlayerViewModel(player: player))
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            PlayerRowView(player: player)
                         }
-                        .tint(.red)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                UserDefaultsManager.shared.removePlayer(withId: player.id)
+                                players = UserDefaultsManager.shared.players
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            .tint(.red)
+                        }
                     }
                 case .selecting:
-                    Button {
-                        viewModel.addPlayer(player)
-                        dismiss()
-                    } label: {
-                        PlayerRowView(player: player)
+                    List {
+                        ForEach(filteredPlayers) { player in
+                            Button {
+                                viewModel.addPlayer(player)
+                                dismiss()
+                            } label: {
+                                PlayerRowView(player: player)
+                            }
+                            .foregroundColor(.primary)
+                        }
                     }
-                    .foregroundColor(.primary)
                 }
             }
-            .onAppear {
-                players = UserDefaultsManager.shared.players
+            if filteredPlayers.isEmpty {
+                Text("players not found")
             }
-            .navigationTitle("Гравці")
-            
-            .navigationBarItems(trailing: NavigationLink {
-                PlayerView(viewModel: PlayerViewModel())
-            } label: {
-                Image(systemName: "plus.circle")
-            })
+        }
+        .navigationTitle("Players")
+        
+        .navigationBarItems(trailing: NavigationLink {
+            PlayerView(viewModel: PlayerViewModel())
+        } label: {
+            Image(systemName: "plus.circle")
+        })
+        
+        .onAppear {
+            players = UserDefaultsManager.shared.players
         }
     }
+    
+    
 }
 
 struct PlayerRowView: View {
@@ -117,7 +129,7 @@ struct PlayerRowView: View {
             }
             
         }
-    }    
+    }
 }
 
 struct PlayerListView_Previews: PreviewProvider {

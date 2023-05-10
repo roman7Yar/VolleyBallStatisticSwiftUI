@@ -9,10 +9,15 @@ import SwiftUI
 
 struct PlayerView: View {
     
+    @Environment(\.dismiss) var dismiss
+
     @State private var pictures = UserDefaultsManager.shared.pictures
     @State private var isShowingPhotoPicker = false
+    @State private var isShowingAlert = false
     @State private var avatarImage = UIImage()
     @State private var circleSize = CGFloat(180)
+    @State private var errorMessage = ""
+
     
     @ObservedObject var viewModel: PlayerViewModel
     
@@ -59,29 +64,50 @@ struct PlayerView: View {
                 
                 VStack {
                     
-                    TextField("Імʼя", text: $viewModel.player.firstName)
+                    TextField("First Name", text: $viewModel.player.firstName)
                         .padding(4)
                         .background(Color.myWhite)
                         .foregroundColor(.myBlack)
                         .cornerRadius(4)
                         .padding(.horizontal, 32)
-                    
-                    TextField("Прізвище", text: $viewModel.player.lastName)
+                        .onChange(of: viewModel.player.firstName) { newName in
+                            let trimmedName = newName.trimmingCharacters(in: .whitespaces)
+                            if trimmedName.count > 16 {
+                                viewModel.player.firstName = String(trimmedName.prefix(16))
+                            } else {
+                                viewModel.player.firstName = trimmedName
+                            }
+                        }
+
+                    TextField("Last Name", text: $viewModel.player.lastName)
                         .padding(4)
                         .background(Color.myWhite)
                         .foregroundColor(.myBlack)
                         .cornerRadius(4)
                         .padding(.horizontal, 32)
-                    
+                        .onChange(of: viewModel.player.lastName) { newName in
+                            let trimmedName = newName.trimmingCharacters(in: .whitespaces)
+                            if trimmedName.count > 16 {
+                                viewModel.player.lastName = String(trimmedName.prefix(16))
+                            } else {
+                                viewModel.player.lastName = trimmedName
+                            }
+                        }
                 }
                 .frame(maxHeight: 160)
                 
                 Spacer()
                 
                 Button {
-                    pictures[viewModel.player.id] = avatarImage.jpegData(compressionQuality: 1)
-                    UserDefaultsManager.shared.pictures = pictures
-                    viewModel.savePlayer(viewModel.player)
+                    if let error = viewModel.checkErrors(viewModel.player) {
+                        isShowingAlert = true
+                        errorMessage = error
+                    } else {
+                        pictures[viewModel.player.id] = avatarImage.jpegData(compressionQuality: 1)
+                        UserDefaultsManager.shared.pictures = pictures
+                        viewModel.savePlayer(viewModel.player)
+                        dismiss()
+                    }
                 } label: {
                     Text("Save")
                         .font(.system(size: 20))
@@ -93,6 +119,12 @@ struct PlayerView: View {
                 }
                 .accentColor(.red)
                 .padding(.vertical, 20)
+                .alert(isPresented: $isShowingAlert) {
+                    Alert(title: Text("Error"),
+                          message: Text(errorMessage),
+                          dismissButton: .default(Text("OK")))
+                }
+
             }
         }
         
