@@ -25,14 +25,17 @@ extension Color {
         let greenValue = Double.random(in: 0.8...0.9)
         return Color(red: redValue, green: greenValue, blue: blueValue)
     }
-    
-
-    
 }
 
 extension Date {
     func isSameDay(as date: Date) -> Bool {
         let calendar = Calendar.current
         return calendar.isDate(self, inSameDayAs: date)
+    }
+}
+
+extension String {
+    func firstChar() -> String {
+        self.isEmpty ? "" : String(self.first!)
     }
 }

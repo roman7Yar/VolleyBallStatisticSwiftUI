@@ -8,31 +8,36 @@
 import SwiftUI
 
 struct TeamView: View {
+    
     @ObservedObject var teamViewModel: TeamViewModel
     
     @State private var isPresented = false
-
-    var layer = [
+    
+    @State private var layer = [
         GridItem(.flexible()),
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+    
     var body: some View {
         ZStack {
             Rectangle()
                 .ignoresSafeArea()
                 .foregroundColor(.myGreen)
+            
             VStack {
                 ZStack {
                     Text(teamViewModel.team.name)
                         .font(.system(size: 60))
                         .foregroundColor(.myWhite)
+                    
                     TextField("Team name", text: $teamViewModel.team.name)
                         .foregroundColor(.clear)
                         .padding(.leading, 100)
                         .tint(.clear)
                 }
                 .padding()
+                
                 LazyVGrid(columns: layer) {
                     if let players = teamViewModel.team.players {
                         ForEach(players) { player in
@@ -43,6 +48,7 @@ struct TeamView: View {
                             }
                         }
                     }
+                   
                     if teamViewModel.team.players.count < 6 {
                         Button {
                             isPresented = true
@@ -55,15 +61,16 @@ struct TeamView: View {
                                 .foregroundColor(.myWhite)
                                 .cornerRadius(50)
                                 .shadow(radius: 12, y: 4)
-
+                            
                         }
                         .padding(.bottom, 48)
                         .sheet(isPresented: $isPresented) {
-                            PlayerListView(listMode: .selecting, viewModel: teamViewModel)
+                            PlayerListView(viewModel: teamViewModel, listMode: .selecting)
                         }
                     }
                 }
                 Spacer()
+                
                 Button {
                     teamViewModel.saveTeam(teamViewModel.team)
                 } label: {
@@ -76,7 +83,7 @@ struct TeamView: View {
                         .cornerRadius(8)
                         .shadow(radius: 12, y: 9)
                 }
-
+                
             }
             .padding()
         }
@@ -88,19 +95,24 @@ struct TeamView: View {
     }
     
     struct PlayerItem2: View {
+        
+        var player: Player
+        
         private let pictures = UserDefaultsManager.shared.pictures
         private let circleSize = CGFloat(100)
-        var player: Player
+        
         var body: some View {
             VStack {
                 ZStack {
                     Circle()
                         .frame(width: circleSize, height: circleSize)
                         .foregroundColor(.myWhite)
-                    Text("\(firstChar(of: player.firstName))" +
-                         "\(firstChar(of: player.lastName))")
-                        .font(.system(size: 50))
-                        .foregroundColor(.myRandomGreen)
+                    
+                    Text(player.firstName.firstChar() +
+                         player.lastName.firstChar())
+                    .font(.system(size: 50))
+                    .foregroundColor(.myRandomGreen)
+                    
                     if let profilePicture = pictures[player.id] {
                         Image(uiImage: UIImage(data: profilePicture)!)
                             .resizable()
@@ -108,9 +120,11 @@ struct TeamView: View {
                             .clipShape(Circle())
                     }
                 }
+                
                 Text("\(player.firstName)")
                     .font(.system(size: 20))
                     .foregroundColor(.myWhite)
+                
                 Text("\(player.lastName)")
                     .font(.system(size: 20))
                     .foregroundColor(.myWhite)

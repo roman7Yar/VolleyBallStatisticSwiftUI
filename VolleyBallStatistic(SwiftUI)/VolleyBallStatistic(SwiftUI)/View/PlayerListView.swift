@@ -17,19 +17,23 @@ struct PlayerListView: View {
     
     @State private var players = UserDefaultsManager.shared.players
     @State private var searchText = ""
-
-    var filteredPlayers: [Player] {
+    
+    @ObservedObject var viewModel = TeamViewModel()
+    
+    private var filteredPlayers: [Player] {
+        
         if searchText.isEmpty {
             return players
         } else {
             return players.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
         }
+        
     }
-
+    
     var listMode = ListMode.detail
-    @ObservedObject var viewModel = TeamViewModel()
-    var index = 0
+    
     var body: some View {
+        
         VStack {
             TextField("Search", text: $searchText)
                 .padding(.leading, 10)
@@ -37,11 +41,12 @@ struct PlayerListView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
                 .padding([.horizontal, .top])
+            
             List(filteredPlayers) { player in
                 switch listMode {
                 case .detail:
                     NavigationLink {
-                        PlayerView(viewModel: CreateUserViewModel(player: player))
+                        PlayerView(viewModel: PlayerViewModel(player: player))
                     } label: {
                         PlayerRowView(player: player)
                     }
@@ -63,7 +68,6 @@ struct PlayerListView: View {
                     }
                     .foregroundColor(.primary)
                 }
-                
             }
             .onAppear {
                 players = UserDefaultsManager.shared.players
@@ -71,7 +75,7 @@ struct PlayerListView: View {
             .navigationTitle("Гравці")
             
             .navigationBarItems(trailing: NavigationLink {
-                PlayerView(viewModel: CreateUserViewModel())
+                PlayerView(viewModel: PlayerViewModel())
             } label: {
                 Image(systemName: "plus.circle")
             })
@@ -80,21 +84,26 @@ struct PlayerListView: View {
 }
 
 struct PlayerRowView: View {
+    
     var player: Player
-    var pictures = UserDefaultsManager.shared.pictures
+    
+    @State private var pictures = UserDefaultsManager.shared.pictures
     
     var body: some View {
         HStack {
+            
             ZStack {
+                
                 Circle()
-                    .frame(width: 50, height: 50
-                    )
+                    .frame(width: 50, height: 50)
                     .foregroundColor(.myRandomGreen)
-                Text("\(firstChar(of: player.firstName))" +
-                     "\(firstChar(of: player.lastName))")
+                
+                Text(player.firstName.firstChar() +
+                     player.lastName.firstChar())
                 .font(.system(size: 20))
                 .foregroundColor(.myWhite)
                 .bold()
+                
                 if let profilePicture = pictures[player.id] {
                     Image(uiImage: UIImage(data: profilePicture)!)
                         .resizable()
@@ -102,18 +111,13 @@ struct PlayerRowView: View {
                         .clipShape(Circle())
                 }
             }
+            
             VStack(alignment: .trailing) {
                 Text(player.fullName)
-//                    .font(.headline)
-//                Text(player.lastName)
-//                    .font(.headline)
             }
+            
         }
-    }
-        func firstChar(of string: String) -> String {
-            string.isEmpty ? "" : String(string.first!)
-    }
-
+    }    
 }
 
 struct PlayerListView_Previews: PreviewProvider {

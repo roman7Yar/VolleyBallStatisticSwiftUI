@@ -13,8 +13,11 @@ enum GameType: String, CaseIterable {
 }
 
 struct SettingsView: View {
+    
     @ObservedObject var gameVM: GameViewModel
+    
     @State private var selectedSegmentIndex = 0
+    
     let segmentItems = ["15", "25"]
     
     var body: some View {
@@ -22,41 +25,46 @@ struct SettingsView: View {
             Rectangle()
                 .foregroundColor(.myGreen)
                 .ignoresSafeArea()
+            
             VStack {
                 ZStack {
                     Rectangle()
                         .foregroundColor(.white)
                         .ignoresSafeArea()
                         .frame(height: 80)
+                    
                     Text("Settings")
                         .font(.system(size: 60))
                         .foregroundColor(.myGreen)
                 }
+                
                 Spacer()
+                
                 VStack {
                     Text("Count to")
                         .foregroundColor(.myWhite)
+                    
                     Picker("", selection: $gameVM.selectedType) {
                         ForEach(GameType.allCases, id: \.self) { type in
                             Text(type.rawValue).tag(type)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-//                    GameViewModel(scoreTo: selectedSegmentIndex)
                 }
                 .padding()
                 .padding(.horizontal, 80)
+                
                 Text("Last 5 events:")
                     .foregroundColor(.myWhite)
                     .bold()
+                
                 VStack(alignment: .leading) {
                     ForEach(gameVM.getLastTenEvents(), id: \.self) { event in
                         Text(event)
                             .foregroundColor(.myWhite)
                     }
                 }
-//                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team1))
-//                TeamRow(teamVM: TeamViewModel(team: gameVM.game.team2))
+                
                 Spacer()
             }
         }
@@ -66,23 +74,21 @@ struct SettingsView: View {
         }
         
     }
-
-
+    
+    
 }
 
-//struct SettingsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView()
-//    }
-//}
-
 struct TeamRow: View {
+    
     @ObservedObject var teamVM: TeamViewModel
+    
     var body: some View {
+        
         HStack(spacing: 40) {
             Text(teamVM.team.name)
                 .font(.system(size: 32))
                 .foregroundColor(.white)
+            
             NavigationLink {
                 TeamView(teamViewModel: teamVM)
             } label: {
@@ -93,9 +99,7 @@ struct TeamRow: View {
                     .padding(.horizontal, 40)
                     .background(Color.yellow)
                     .cornerRadius(8)
-                
             }
-            
         }
     }
 }

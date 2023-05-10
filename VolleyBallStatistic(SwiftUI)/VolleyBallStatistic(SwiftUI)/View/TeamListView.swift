@@ -92,18 +92,21 @@ struct TeamItem: View {
     @ObservedObject var game: GameModel
     
     @State var isSelected = false
-
+    
     var body: some View {
         VStack(alignment: .leading) {
+            
             Text(teamViewModel.team.name)
                 .font(.system(size: 30))
                 .foregroundColor(.myWhite)
+            
             ZStack {
                 Rectangle()
                     .frame(minWidth: 300, minHeight: 160)
                     .foregroundColor(.white)
                     .cornerRadius(25)
                     .shadow(radius: 12, y: 9)
+                
                 VStack {
                     ScrollView(.horizontal) {
                         HStack(spacing: 8) {
@@ -114,6 +117,7 @@ struct TeamItem: View {
                             }
                         }
                     }
+                    
                     HStack {
                         NavigationLink {
                             TeamView(teamViewModel: TeamViewModel(team: teamViewModel.team))
@@ -125,7 +129,9 @@ struct TeamItem: View {
                                 .background(Color.yellow)
                                 .cornerRadius(8)
                         }
+                        
                         Spacer()
+                        
                         Button {
                             isSelected.toggle()
                             if isSelected {
@@ -143,10 +149,6 @@ struct TeamItem: View {
                                 Text("Select")
                                     .foregroundColor(.myYellow)
                             }
-//                            Image(systemName: game.chekSelection(teamViewModel) ? "star.fill" : "star")
-//                                .resizable()
-//                                .frame(width: 30, height: 30)
-//                                .foregroundColor(game.chekSelection(teamViewModel) ? .myYellow : .myDarkGray)
                         }
                     }
                     .padding([.horizontal, .bottom], 20)
@@ -161,19 +163,24 @@ struct TeamItem: View {
 }
 
 struct PlayerItem: View {
+    
+    var player: Player
+    
     private let pictures = UserDefaultsManager.shared.pictures
     private let circleSize = CGFloat(64)
-    var player: Player
+    
     var body: some View {
         VStack {
             ZStack {
                 Circle()
                     .frame(width: circleSize, height: circleSize)
                     .foregroundColor(.myRandomGreen)
-                Text("\(firstChar(of: player.firstName))" +
-                     "\(firstChar(of: player.lastName))")
-                    .font(.system(size: 30))
-                    .foregroundColor(.myWhite)
+                
+                Text(player.firstName.firstChar() +
+                     player.lastName.firstChar())
+                .font(.system(size: 30))
+                .foregroundColor(.myWhite)
+                
                 if let profilePicture = pictures[player.id] {
                     Image(uiImage: UIImage(data: profilePicture)!)
                         .resizable()
@@ -181,7 +188,9 @@ struct PlayerItem: View {
                         .clipShape(Circle())
                 }
             }
+            
             Text(player.firstName)
+            
             Text(player.lastName)
         }
         .foregroundColor(.myBlack)
