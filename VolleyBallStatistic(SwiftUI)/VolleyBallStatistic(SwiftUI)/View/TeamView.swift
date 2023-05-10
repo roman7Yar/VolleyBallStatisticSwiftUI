@@ -9,10 +9,14 @@ import SwiftUI
 
 struct TeamView: View {
     
+    @Environment(\.dismiss) var dismiss
+
     @ObservedObject var teamViewModel: TeamViewModel
     
     @State private var isPresented = false
     @State private var isShowingAlert = false
+    @State private var isEditing = false
+
     
     @State private var errorMessage = ""
     
@@ -29,51 +33,59 @@ struct TeamView: View {
                 .foregroundColor(.myGreen)
             
             VStack {
-                ZStack {
+                HStack {
                     Text(teamViewModel.team.name)
                         .font(.system(size: 40))
                         .foregroundColor(.myWhite)
-                    
-                    TextField("Team name", text: $teamViewModel.team.name)
-                        .foregroundColor(.clear)
-                        .padding(.leading, 100)
-                        .tint(.clear)
-                        .onChange(of: teamViewModel.team.name) { newName in
-                            if newName.count > 16 {
-                                teamViewModel.team.name = String(newName.prefix(16))
-                            }
+                        .alert("Enter team name", isPresented: $isEditing) {
+                            TextField("Enter team name", text: $teamViewModel.team.name)
+                                .onChange(of: teamViewModel.team.name) { newName in
+                                    let trimmedName = newName.trimmingCharacters(in: .whitespaces)
+                                    if trimmedName.count > 16 {
+                                        teamViewModel.team.name = String(trimmedName.prefix(16))
+                                    } else {
+                                        teamViewModel.team.name = trimmedName
+                                    }
+                                }
                         }
+                    
+                    Button {
+                        isEditing = true
+                    } label: {
+                        Image(systemName: "pencil")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.myWhite)
+                    }
+                    
                 }
                 .padding()
                 
                 LazyVGrid(columns: layer) {
                     if let players = teamViewModel.team.players {
-                        ForEach(players) { player in
-                            Button {
-                                teamViewModel.removePlayer(player)
-                            } label: {
-                                PlayerItem2(player: player)
+                        ForEach(0..<6) { index in
+                            if index < players.count {
+                                let player = players[index]
+                                Button {
+                                    teamViewModel.removePlayer(player)
+                                } label: {
+                                    PlayerItem2(player: player)
+                                }
+                            } else {
+                                NavigationLink {
+                                    PlayerListView(viewModel: teamViewModel, listMode: .selecting)
+                                } label: {
+                                    Image(systemName: "plus")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                        .padding(8)
+                                        .background(Color.myYellow)
+                                        .foregroundColor(.myWhite)
+                                        .cornerRadius(50)
+                                        .shadow(radius: 12, y: 4)
+                                }
+                                .padding(.bottom, 48)
                             }
-                        }
-                    }
-                   
-                    if teamViewModel.team.players.count < 6 {
-                        Button {
-                            isPresented = true
-                        } label: {
-                            Image(systemName: "plus")
-                                .resizable()
-                                .frame(width: 32, height: 32)
-                                .padding(8)
-                                .background(Color.myYellow)
-                                .foregroundColor(.myWhite)
-                                .cornerRadius(50)
-                                .shadow(radius: 12, y: 4)
-                            
-                        }
-                        .padding(.bottom, 48)
-                        .sheet(isPresented: $isPresented) {
-                            PlayerListView(viewModel: teamViewModel, listMode: .selecting)
                         }
                     }
                 }
@@ -85,6 +97,7 @@ struct TeamView: View {
                         errorMessage = error
                     } else {
                         teamViewModel.saveTeam(teamViewModel.team)
+                        dismiss()
                     }
                 } label: {
                     Text("Save")
