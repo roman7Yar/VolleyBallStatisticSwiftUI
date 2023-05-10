@@ -12,6 +12,9 @@ struct TeamView: View {
     @ObservedObject var teamViewModel: TeamViewModel
     
     @State private var isPresented = false
+    @State private var isShowingAlert = false
+    
+    @State private var errorMessage = ""
     
     @State private var layer = [
         GridItem(.flexible()),
@@ -28,13 +31,18 @@ struct TeamView: View {
             VStack {
                 ZStack {
                     Text(teamViewModel.team.name)
-                        .font(.system(size: 60))
+                        .font(.system(size: 40))
                         .foregroundColor(.myWhite)
                     
                     TextField("Team name", text: $teamViewModel.team.name)
                         .foregroundColor(.clear)
                         .padding(.leading, 100)
                         .tint(.clear)
+                        .onChange(of: teamViewModel.team.name) { newName in
+                            if newName.count > 16 {
+                                teamViewModel.team.name = String(newName.prefix(16))
+                            }
+                        }
                 }
                 .padding()
                 
@@ -72,7 +80,12 @@ struct TeamView: View {
                 Spacer()
                 
                 Button {
-                    teamViewModel.saveTeam(teamViewModel.team)
+                    if let error = teamViewModel.checkErrors(teamViewModel.team) {
+                        isShowingAlert = true
+                        errorMessage = error
+                    } else {
+                        teamViewModel.saveTeam(teamViewModel.team)
+                    }
                 } label: {
                     Text("Save")
                         .font(.system(size: 20))
@@ -82,6 +95,11 @@ struct TeamView: View {
                         .background(Color.yellow)
                         .cornerRadius(8)
                         .shadow(radius: 12, y: 9)
+                }
+                .alert(isPresented: $isShowingAlert) {
+                    Alert(title: Text("Error"),
+                          message: Text(errorMessage),
+                          dismissButton: .default(Text("OK")))
                 }
                 
             }

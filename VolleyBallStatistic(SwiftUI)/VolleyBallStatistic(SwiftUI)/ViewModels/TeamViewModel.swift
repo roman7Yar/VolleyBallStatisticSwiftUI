@@ -55,7 +55,18 @@ class TeamViewModel: ObservableObject {
     }
     
     func saveTeam(_ team: Team) {
-        UserDefaultsManager.shared.addTeam(team)
+        if !team.name.isEmpty || team.players.count > 1 {
+            UserDefaultsManager.shared.addTeam(team)
+        }
+    }
+    
+    func checkErrors(_ team: Team) -> String? {
+        if team.name.isEmpty {
+            return "team must have a name"
+        } else if team.players.count < 2 {
+            return "need more players"
+        }
+        return nil
     }
     
 }
